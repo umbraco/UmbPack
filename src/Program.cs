@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Umbraco.Packager.CI.Properties;
@@ -75,10 +76,14 @@ namespace Umbraco.Packager.CI
             // Check zip contains valid package.xml
             Verify.ContainsPackageXml(filePath);
 
+            // Config HTTPClient
+            _client.BaseAddress = new Uri("https://our.umbraco.com");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
+
             // Verify API Key is valid with our.umbraco.com
             // Could throw network connection errors or invalid key
             // TODO: The API token check from our.umb - WebAPI needs to respond with list of current files
-            Verify.ApiKeyIsValid(options.ApiKey);
+            await Verify.ApiKeyIsValid(_client);
 
             // Parse package.xml before upload to print out info
             // and to use for comparisson on what is already uploaded
@@ -121,8 +126,6 @@ namespace Umbraco.Packager.CI
                 }
             }
 
-            // Will need to set JWT bearer/auth token in header
-            _client.BaseAddress = new Uri("http://our.umbraco.local");
 
             // TODO - Google/Research .NET Core WebClient POST File
             // TODO - Figure out how to get a progress/report when uploading & tie into 3rd Party progress bar above

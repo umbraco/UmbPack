@@ -2,6 +2,9 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Umbraco.Packager.CI
 {
@@ -51,21 +54,33 @@ namespace Umbraco.Packager.CI
             }
         }
 
-        public static void ApiKeyIsValid(string apiKey)
+        public static async Task ApiKeyIsValid(HttpClient client)
         {
-           // WebClient
-           // HttpClient
-           // HttpWebRequest
-           // RestSharp
+            try
+            {
+                // The JWT token contains a project ID/key - hence no querystring ?id=3256
+                //var stringTask = client.GetStringAsync("/api/package/GetLatestProjectFiles");
+                //var stringTask = client.GetStringAsync("/umbraco/Surface/Meetups/GetEvents");
 
-            // https://our.umbraco.com/api/verify?key=SomeJWT
-
-            // Could get network error or our.umb down
-
-            // API will return 403 if not valid
-            // OR 200 OK with JSON of the zip files uploaded for this package
-
-            //throw new NotImplementedException();
+                var httpResponse = await client.GetAsync("/umbraco/Surface/Meetups/GetEvents");
+                if(httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    Console.Error.WriteLine($"API Key is invalid");
+                    Environment.Exit(89); //I made up a number 89
+                }
+                else if (httpResponse.IsSuccessStatusCode)
+                {
+                    // Get the JSON string content which gives us a list
+                    // of current Umbraco Package .zips for this project
+                    var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                    Console.WriteLine(apiReponse);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Could get network error or our.umb down
+                throw;
+            }
         }
     }
 }
