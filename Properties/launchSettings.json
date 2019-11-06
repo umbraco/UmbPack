@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Umbraco.Packager.CI": {
+      "commandName": "Project"
+    }
+  }
+}
