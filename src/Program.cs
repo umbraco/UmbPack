@@ -129,19 +129,20 @@ namespace Umbraco.Packager.CI
 
 
                         MultipartFormDataContent form = new MultipartFormDataContent();
-                        HttpContent content = new StringContent("fileToUpload");
-                        form.Add(content, "fileToUpload");
-
                         var fileInfo = new FileInfo(filePath);
-                        content = new StreamContent(fileInfo.OpenRead());
+                        var content = new StreamContent(fileInfo.OpenRead());
                         content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                         {
-                            Name = "fileToUpload",
+                            Name = "file",
                             FileName = fileInfo.Name
                         };
                         form.Add(content);
-
-                        var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UploadFile", form);
+                        form.Add(new StringContent("true"), "isCurrent");
+                        form.Add(new StringContent("4.7.2"), "dotNetVersion");
+                        form.Add(new StringContent("package"), "fileType");
+                        form.Add(new StringContent("[{Version: '8.3.0'}]"), "umbracoVersions");
+                        
+                        var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
                         if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
