@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Umbraco.Packager.CI
@@ -54,27 +55,37 @@ namespace Umbraco.Packager.CI
             }
         }
 
-        public static async Task ApiKeyIsValid(HttpClient client)
+        public static async Task ApiKeyIsValid(string apiKey)
         {
             try
             {
-                // The JWT token contains a project ID/key - hence no querystring ?id=3256
-                var httpResponse = await client.GetAsync("/Umbraco/Api/ProjectUpload/GetProjectFiles");
-                if(httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                using(var httpClient = new HttpClient())
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("API Key is invalid");
-                    Console.ResetColor();
+                    // Config HTTPClient
+                    //httpClient.BaseAddress = new Uri("http://our.umbraco.local");
+                    httpClient.BaseAddress = new Uri("http://localhost:24292");
 
-                    // ERROR_ACCESS_DENIED
-                    Environment.Exit(5);
-                }
-                else if (httpResponse.IsSuccessStatusCode)
-                {
-                    // Get the JSON string content which gives us a list
-                    // of current Umbraco Package .zips for this project
-                    var apiReponse = await httpResponse.Content.ReadAsStringAsync();
-                    Console.WriteLine(apiReponse);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    // The JWT token contains a project ID/key - hence no querystring ?id=3256
+                    var httpResponse = await httpClient.GetAsync("/Umbraco/Api/ProjectUpload/GetProjectFiles");
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine("API Key is invalid");
+                        Console.ResetColor();
+
+                        // ERROR_ACCESS_DENIED
+                        Environment.Exit(5);
+                    }
+                    else if (httpResponse.IsSuccessStatusCode)
+                    {
+                        // Get the JSON string content which gives us a list
+                        // of current Umbraco Package .zips for this project
+                        var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                        //Console.WriteLine(apiReponse);
+                    }
                 }
             }
             catch (HttpRequestException ex)

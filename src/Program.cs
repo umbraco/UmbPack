@@ -3,8 +3,11 @@ using CommandLine.Text;
 using ShellProgressBar;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Handlers;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,8 +20,6 @@ namespace Umbraco.Packager.CI
 
     public class Program
     {
-        private static readonly HttpClient _client = new HttpClient();
-
         public static async Task Main(string[] args)
         {
             var parser = new CommandLine.Parser(with => with.HelpWriter = null);
@@ -55,6 +56,8 @@ namespace Umbraco.Packager.CI
             // --package=../MyParentFolder.zip
             var filePath = options.Package;
 
+            var apiKey = options.ApiKey;
+
             // Check we can find the file
             Verify.FilePath(filePath);
 
@@ -64,15 +67,8 @@ namespace Umbraco.Packager.CI
             // Check zip contains valid package.xml
             Verify.ContainsPackageXml(filePath);
 
-            // Config HTTPClient
-            _client.BaseAddress = new Uri("http://our.umbraco.local");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
             // Verify API Key is valid with our.umbraco.com
-            // Could throw network connection errors or invalid key
-            // TODO: The API token check from our.umb - WebAPI needs to respond with list of current files
-            await Verify.ApiKeyIsValid(_client);
+            await Verify.ApiKeyIsValid(apiKey);
 
             // Parse package.xml before upload to print out info
             // and to use for comparisson on what is already uploaded
@@ -86,7 +82,7 @@ namespace Umbraco.Packager.CI
 
             // OK all checks passed - time to upload it
             // With a nice progress bar
-            await UploadPackage(filePath);
+            await UploadPackage(filePath, apiKey);
 
             // Got this far then it got uploaded to our.umb all OK
             Console.WriteLine($"The package '{filePath}' was sucessfully uploaded to our.umbraco.com");
@@ -94,7 +90,7 @@ namespace Umbraco.Packager.CI
             Environment.Exit(0);
         }
 
-        private static async Task UploadPackage(string filePath)
+        private static async Task UploadPackage(string filePath, string apiKey)
         {
             // https://github.com/Mpdreamz/shellprogressbar
             var options = new ProgressBarOptions
@@ -105,20 +101,71 @@ namespace Umbraco.Packager.CI
                 BackgroundCharacter = '\u2593'
             };
 
-            int ticks = 10;
-            using(var pbar = new ProgressBar(ticks, "Uploading Package to our.umbraco.com", options))
+
+            // Ticks in this progressbar is set to 100 parts
+            // As the ProgressBar does not support Long to use BytesUploaded
+            using (var pbar = new ProgressBar(100, "Uploading Package to our.umbraco.com", options))
             {
-                for (var i = 0; i < ticks; i++)
+                try
                 {
-                    Thread.Sleep(1000);
-                    pbar.Tick();
+                    // HttpClient will use this event handler to give us
+                    // Reporting on how its progress the file upload
+                    var processMsgHander = new ProgressMessageHandler(new HttpClientHandler());
+                    processMsgHander.HttpSendProgress += (sender, e) =>
+                    {
+                        // Increase the number of ticks to
+                        // be same number as the percentage reported back from event
+
+                        // TODO: Note this gonna be hard to see moving with our.umb running locally & pkgs generally small files
+                        // Would be EVIL to put in a Thread.Sleep()
+                        pbar.Tick(e.ProgressPercentage);
+                    };
+
+                    using (var client = new HttpClient(processMsgHander))
+                    {
+                        client.BaseAddress = new Uri("http://localhost:24292");
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                        MultipartFormDataContent form = new MultipartFormDataContent();
+                        HttpContent content = new StringContent("fileToUpload");
+                        form.Add(content, "fileToUpload");
+
+                        var fileInfo = new FileInfo(filePath);
+                        content = new StreamContent(fileInfo.OpenRead());
+                        content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        {
+                            Name = "fileToUpload",
+                            FileName = fileInfo.Name
+                        };
+                        form.Add(content);
+
+                        var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UploadFile", form);
+                        if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Error.WriteLine("API Key is invalid");
+                            Console.ResetColor();
+
+                            // ERROR_ACCESS_DENIED
+                            Environment.Exit(5);
+                        }
+                        else if (httpResponse.IsSuccessStatusCode)
+                        {
+                            // Get the JSON string content which gives us a list
+                            // of current Umbraco Package .zips for this project
+                            var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                            Console.WriteLine(apiReponse);
+                        }
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    // Could get network error or our.umb down
+                    throw;
                 }
             }
-
-
-            // TODO - Google/Research .NET Core WebClient POST File
-            // TODO - Figure out how to get a progress/report when uploading & tie into 3rd Party progress bar above
-
         }
     }
 
