@@ -62,8 +62,12 @@ namespace Umbraco.Packager.CI
                 var httpResponse = await client.GetAsync("/Umbraco/Api/ProjectUpload/GetProjectFiles");
                 if(httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Console.Error.WriteLine($"API Key is invalid");
-                    Environment.Exit(89); //I made up a number 89
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Error.WriteLine("API Key is invalid");
+                    Console.ResetColor();
+
+                    // ERROR_ACCESS_DENIED
+                    Environment.Exit(5);
                 }
                 else if (httpResponse.IsSuccessStatusCode)
                 {

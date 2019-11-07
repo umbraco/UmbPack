@@ -21,16 +21,6 @@ namespace Umbraco.Packager.CI
 
         public static async Task Main(string[] args)
         {
-            //args = "--help".Split();
-            //args ="--version".Split();
-            //args = "WAT".Split();
-            //args = "--package=myfile.zip --key=MyKey".Split();
-            //args = "--package=./myfile.zip --key=MyKey".Split();
-            args = "--package=./Our.Umbraco.NuCacheExplorer_1.0.0.zip --key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJfaWQiOjExNzUsInByb2plY3RfaWQiOjEwNjE0OSwiZGF0ZV9jcmVhdGVkIjoiMjAxOS0xMS0wNyAxMzowMzo0OFoifQ.eg9s-bP8zODlOtzT91rQujlUHovkRhCcf7C4fS5n1fY".Split();
-            //args = "--package=../myParentfile.zip --key=MyKey".Split();
-            //args = "--package=./myfile.txt --key=MyKey".Split();
-            //args = "--package=invalid-file.zip --key=MyKey".Split();
-
             var parser = new CommandLine.Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
 
@@ -52,12 +42,10 @@ namespace Umbraco.Packager.CI
             {
                 // 0 is everything is all OK exit code
                 Environment.Exit(0);
-            }   
-            
-            var foo = errs.FirstOrDefault();
-            //BadFormatConversionError (WAT)
-            //MissingRequiredOptionError (No Value or not set --package)
-            Environment.Exit(4);
+            }
+
+            // ERROR_INVALID_FUNCTION
+            Environment.Exit(1);
         }
 
         static async Task Run(Options options)
