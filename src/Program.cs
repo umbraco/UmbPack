@@ -26,7 +26,7 @@ namespace Umbraco.Packager.CI
             //args = "WAT".Split();
             //args = "--package=myfile.zip --key=MyKey".Split();
             //args = "--package=./myfile.zip --key=MyKey".Split();
-            args = "--package=./Our.Umbraco.NuCacheExplorer_1.0.0.zip --key=MyKey".Split();
+            args = "--package=./Our.Umbraco.NuCacheExplorer_1.0.0.zip --key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJfaWQiOjExNzUsInByb2plY3RfaWQiOjEwNjE0OSwiZGF0ZV9jcmVhdGVkIjoiMjAxOS0xMS0wNyAxMzowMzo0OFoifQ.eg9s-bP8zODlOtzT91rQujlUHovkRhCcf7C4fS5n1fY".Split();
             //args = "--package=../myParentfile.zip --key=MyKey".Split();
             //args = "--package=./myfile.txt --key=MyKey".Split();
             //args = "--package=invalid-file.zip --key=MyKey".Split();
@@ -77,8 +77,9 @@ namespace Umbraco.Packager.CI
             Verify.ContainsPackageXml(filePath);
 
             // Config HTTPClient
-            _client.BaseAddress = new Uri("https://our.umbraco.com");
+            _client.BaseAddress = new Uri("http://our.umbraco.local");
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             // Verify API Key is valid with our.umbraco.com
             // Could throw network connection errors or invalid key

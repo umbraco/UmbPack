@@ -59,10 +59,7 @@ namespace Umbraco.Packager.CI
             try
             {
                 // The JWT token contains a project ID/key - hence no querystring ?id=3256
-                //var stringTask = client.GetStringAsync("/api/package/GetLatestProjectFiles");
-                //var stringTask = client.GetStringAsync("/umbraco/Surface/Meetups/GetEvents");
-
-                var httpResponse = await client.GetAsync("/umbraco/Surface/Meetups/GetEvents");
+                var httpResponse = await client.GetAsync("/Umbraco/Api/ProjectUpload/GetProjectFiles");
                 if(httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     Console.Error.WriteLine($"API Key is invalid");
