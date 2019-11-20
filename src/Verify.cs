@@ -62,8 +62,9 @@ namespace Umbraco.Packager.CI
                 using(var httpClient = new HttpClient())
                 {
                     // Config HTTPClient
+                    httpClient.BaseAddress = new Uri("http://ourumb.eu.ngrok.io");
                     //httpClient.BaseAddress = new Uri("http://our.umbraco.local");
-                    httpClient.BaseAddress = new Uri("http://localhost:24292");
+                    //httpClient.BaseAddress = new Uri("http://localhost:24292");
 
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

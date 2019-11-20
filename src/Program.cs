@@ -1,15 +1,12 @@
 ﻿using CommandLine;
 using CommandLine.Text;
-using ShellProgressBar;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Handlers;
 using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 using Umbraco.Packager.CI.Properties;
 
@@ -22,6 +19,8 @@ namespace Umbraco.Packager.CI
     {
         public static async Task Main(string[] args)
         {
+            //args = "--package=./Our.Umbraco.NuCacheExplorer_1.0.0.zip --key=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJfaWQiOjExNzUsInByb2plY3RfaWQiOjEwNjE0OSwiZGF0ZV9jcmVhdGVkIjoiMjAxOS0xMS0wNyAxMzowMzo0OFoifQ.eg9s-bP8zODlOtzT91rQujlUHovkRhCcf7C4fS5n1fY".Split();
+
             var parser = new CommandLine.Parser(with => with.HelpWriter = null);
             var parserResult = parser.ParseArguments<Options>(args);
 
@@ -74,6 +73,12 @@ namespace Umbraco.Packager.CI
             // and to use for comparisson on what is already uploaded
             var packageInfo = Parse.PackageXml(filePath);
 
+            // Prompt all the things
+            // .NET Version
+            // filetype: Package or HotFix (P or H)
+            // 
+
+
             // The API token check - WebAPI needs to respond with list of current files
             // Verify same file name does not already exist on our.umb
             // Verify we have a newer version that latest/current file for project
@@ -92,80 +97,63 @@ namespace Umbraco.Packager.CI
 
         private static async Task UploadPackage(string filePath, string apiKey)
         {
-            // https://github.com/Mpdreamz/shellprogressbar
-            var options = new ProgressBarOptions
+            try
             {
-                ForegroundColor = ConsoleColor.Yellow,
-                ForegroundColorDone = ConsoleColor.DarkGreen,
-                BackgroundColor = ConsoleColor.DarkGray,
-                BackgroundCharacter = '\u2593'
-            };
-
-
-            // Ticks in this progressbar is set to 100 parts
-            // As the ProgressBar does not support Long to use BytesUploaded
-            using (var pbar = new ProgressBar(100, "Uploading Package to our.umbraco.com", options))
-            {
-                try
+                // HttpClient will use this event handler to give us
+                // Reporting on how its progress the file upload
+                var processMsgHander = new ProgressMessageHandler(new HttpClientHandler());
+                processMsgHander.HttpSendProgress += (sender, e) =>
                 {
-                    // HttpClient will use this event handler to give us
-                    // Reporting on how its progress the file upload
-                    var processMsgHander = new ProgressMessageHandler(new HttpClientHandler());
-                    processMsgHander.HttpSendProgress += (sender, e) =>
-                    {
-                        // Increase the number of ticks to
-                        // be same number as the percentage reported back from event
+                    // Could try to reimplement progressbar - but that library did not work in GH Actions :(
+                    var percent = e.ProgressPercentage;
+                };
 
-                        // TODO: Note this gonna be hard to see moving with our.umb running locally & pkgs generally small files
-                        // Would be EVIL to put in a Thread.Sleep()
-                        pbar.Tick(e.ProgressPercentage);
+                using (var client = new HttpClient(processMsgHander))
+                {
+                    //client.BaseAddress = new Uri("http://localhost:24292");
+                    //client.BaseAddress = new Uri("http://our.umbraco.local");
+                    client.BaseAddress = new Uri("http://ourumb.eu.ngrok.io");
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    var fileInfo = new FileInfo(filePath);
+                    var content = new StreamContent(fileInfo.OpenRead());
+                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = "file",
+                        FileName = fileInfo.Name
                     };
+                    form.Add(content);
+                    form.Add(new StringContent("true"), "isCurrent");
+                    form.Add(new StringContent("4.7.2"), "dotNetVersion");
+                    form.Add(new StringContent("package"), "fileType");
+                    form.Add(new StringContent("[{Version: '8.3.0'}]"), "umbracoVersions");
 
-                    using (var client = new HttpClient(processMsgHander))
+                    var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        client.BaseAddress = new Uri("http://localhost:24292");
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Error.WriteLine("API Key is invalid");
+                        Console.ResetColor();
 
-
-                        MultipartFormDataContent form = new MultipartFormDataContent();
-                        var fileInfo = new FileInfo(filePath);
-                        var content = new StreamContent(fileInfo.OpenRead());
-                        content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-                        {
-                            Name = "file",
-                            FileName = fileInfo.Name
-                        };
-                        form.Add(content);
-                        form.Add(new StringContent("true"), "isCurrent");
-                        form.Add(new StringContent("4.7.2"), "dotNetVersion");
-                        form.Add(new StringContent("package"), "fileType");
-                        form.Add(new StringContent("[{Version: '8.3.0'}]"), "umbracoVersions");
-                        
-                        var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
-                        if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Error.WriteLine("API Key is invalid");
-                            Console.ResetColor();
-
-                            // ERROR_ACCESS_DENIED
-                            Environment.Exit(5);
-                        }
-                        else if (httpResponse.IsSuccessStatusCode)
-                        {
-                            // Get the JSON string content which gives us a list
-                            // of current Umbraco Package .zips for this project
-                            var apiReponse = await httpResponse.Content.ReadAsStringAsync();
-                            Console.WriteLine(apiReponse);
-                        }
+                        // ERROR_ACCESS_DENIED
+                        Environment.Exit(5);
+                    }
+                    else if (httpResponse.IsSuccessStatusCode)
+                    {
+                        // Get the JSON string content which gives us a list
+                        // of current Umbraco Package .zips for this project
+                        var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                        Console.WriteLine(apiReponse);
                     }
                 }
-                catch (HttpRequestException ex)
-                {
-                    // Could get network error or our.umb down
-                    throw;
-                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Could get network error or our.umb down
+                throw;
             }
         }
     }
