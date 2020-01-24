@@ -61,19 +61,34 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to                         888                                         
-        ///                        888                                         
-        ///888   888 88888b.d88b.  88888b.  888d888 8888b.   .d8888b  .d88b. 
+        ///   Looks up a localized string similar to 
+        ///                        888
+        ///                        888
+        ///888   888 88888b.d88b.  88888b.  888d888 8888b.   .d8888b  .d88b.
         ///888   888 888 &quot;888 &quot;88b 888 &quot;88b 888P&quot;      &quot;88b d88P&quot;    d88&quot;&quot;88b
         ///888   888 888  888  888 888  888 888    .d888888 888      888  888
         ///Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
-        /// &quot;Y888P&quot;  888  888  888 88888P&quot;  888    &quot;Y888888  &quot;Y8888P  &quot;Y88P&quot; 
+        /// &quot;Y888P&quot;  888  888  888 88888P&quot;  888    &quot;Y888888  &quot;Y8888P  &quot;Y88P&quot;
         ///
-        ///------------------------------ [rest of string was truncated]&quot;;.
+        ///------------------------------------------------------------------
+        ///    .
         /// </summary>
         internal static string Ascaii {
             get {
                 return ResourceManager.GetString("Ascaii", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
+        ///It only covers the most common items, and trys to guess sensible defaults
+        ///
+        ///see .. for definitive documentatio of those fields
+        ///and excatly what they do.
+        /// </summary>
+        internal static string InitHeader {
+            get {
+                return ResourceManager.GetString("InitHeader", resourceCulture);
             }
         }
     }
