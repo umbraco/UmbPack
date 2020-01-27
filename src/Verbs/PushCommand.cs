@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using CommandLine;
+using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
 {
@@ -72,7 +73,7 @@ namespace Umbraco.Packager.CI.Verbs
             await UploadPackage(filePath, apiKey);
 
             // Got this far then it got uploaded to our.umb all OK
-            Console.WriteLine($"The package '{filePath}' was sucessfully uploaded to our.umbraco.com");
+            Console.WriteLine(Resources.Push_Complete, filePath);
 
             return 0;
         }

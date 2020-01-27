@@ -80,15 +80,141 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Author.
+        /// </summary>
+        internal static string Init_Author {
+            get {
+                return ResourceManager.GetString("Init.Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About to write to {0}.
+        /// </summary>
+        internal static string Init_Confirm {
+            get {
+                return ResourceManager.GetString("Init.Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string Init_Description {
+            get {
+                return ResourceManager.GetString("Init.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
         ///It only covers the most common items, and trys to guess sensible defaults
         ///
         ///see .. for definitive documentatio of those fields
         ///and excatly what they do.
         /// </summary>
-        internal static string InitHeader {
+        internal static string Init_Header {
             get {
-                return ResourceManager.GetString("InitHeader", resourceCulture);
+                return ResourceManager.GetString("Init.Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Version: &apos;{0}&apos;.
+        /// </summary>
+        internal static string Init_InvalidVersion {
+            get {
+                return ResourceManager.GetString("Init.InvalidVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Licence.
+        /// </summary>
+        internal static string Init_Licence {
+            get {
+                return ResourceManager.GetString("Init.Licence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The location where you want to put the package file doesn&apos;t exist [{0}]&quot;.
+        /// </summary>
+        internal static string Init_MissingFolder {
+            get {
+                return ResourceManager.GetString("Init.MissingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package Name.
+        /// </summary>
+        internal static string Init_PackageName {
+            get {
+                return ResourceManager.GetString("Init.PackageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It this OK?.
+        /// </summary>
+        internal static string Init_Prompt {
+            get {
+                return ResourceManager.GetString("Init.Prompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Umbraco Version.
+        /// </summary>
+        internal static string Init_UmbracoVersion {
+            get {
+                return ResourceManager.GetString("Init.UmbracoVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Url.
+        /// </summary>
+        internal static string Init_Url {
+            get {
+                return ResourceManager.GetString("Init.Url", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string Init_Version {
+            get {
+                return ResourceManager.GetString("Init.Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Website.
+        /// </summary>
+        internal static string Init_Website {
+            get {
+                return ResourceManager.GetString("Init.Website", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to locate the package.xml file {0}.
+        /// </summary>
+        internal static string Pack_MissingXml {
+            get {
+                return ResourceManager.GetString("Pack.MissingXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The package &apos;{0}&apos; was sucessfully uploaded to our.umbraco.com.
+        /// </summary>
+        internal static string Push_Complete {
+            get {
+                return ResourceManager.GetString("Push.Complete", resourceCulture);
             }
         }
     }

@@ -24,7 +24,11 @@ namespace Umbraco.Packager.CI
             //
             // these are handled by the Command classes.
 
-            var parser = new CommandLine.Parser(with => with.HelpWriter = null);
+            var parser = new CommandLine.Parser(with => {
+                with.HelpWriter = null;
+                with.AutoVersion = false;
+                with.CaseSensitive = false;
+            } );
 
             // TODO: could load the verbs by interface or class
 
@@ -39,7 +43,11 @@ namespace Umbraco.Packager.CI
 
         static async Task DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
         {
-            var helpText = HelpText.AutoBuild(result);
+            var helpText = HelpText.AutoBuild(result, h =>
+            {
+                h.AutoVersion = false;
+                return h;
+            }, e => e);
             
             // Append header with Ascaii Art
             helpText.Heading = Resources.Ascaii + Environment.NewLine + helpText.Heading;

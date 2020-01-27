@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
 using CommandLine;
-
+using CommandLine.Text;
 using Semver;
 
 using Umbraco.Packager.CI.Properties;
@@ -17,13 +19,15 @@ namespace Umbraco.Packager.CI.Verbs
     [Verb("init", HelpText = "Initializes a package.xml file")]
     public class InitOptions
     {
-        [Value(0, HelpText = "Path to where package file should be created",
-            Default = "")]
+        [Value(0,
+            MetaName = "Package File",
+            HelpText = "Path to where package file should be created")]
         public string PackageFile { get; set; }
 
         [Option("nuspec", HelpText = "Use a nuspec file as a starting point")]
         public string NuSpecFile { get; set; }
     }
+
 
     /// <summary>
     ///  Init command, askes the user some questions makes a package.xml file
@@ -49,32 +53,32 @@ namespace Umbraco.Packager.CI.Verbs
 
             var setup = new PackageSetup();
 
-            Console.WriteLine(Resources.InitHeader);
+            Console.WriteLine(Resources.Init_Header);
 
-            setup.Name = GetUserInput("Package Name", Path.GetFileName(currentFolder));
+            setup.Name = GetUserInput(Resources.Init_PackageName, Path.GetFileName(currentFolder));
 
-            setup.Description = GetUserInput("Description", "Another Awesome Umbraco Package");
+            setup.Description = GetUserInput(Resources.Init_Description, "Another Awesome Umbraco Package");
 
-            setup.Version = GetVersionString("Version:", "1.0.0");
+            setup.Version = GetVersionString(Resources.Init_Version, "1.0.0");
 
-            setup.Url = GetUserInput("Url", "http://our.umbraco.com");
+            setup.Url = GetUserInput(Resources.Init_Url, "http://our.umbraco.com");
 
-            setup.UmbracoVersion = GetVersionString("Umbraco Version:", "8.0.0");
+            setup.UmbracoVersion = GetVersionString(Resources.Init_UmbracoVersion, "8.0.0");
 
-            setup.Author = GetUserInput("Author", Environment.UserName);
+            setup.Author = GetUserInput(Resources.Init_Author, Environment.UserName);
 
-            setup.Website = GetUserInput("Website", "http://our.umbraco.com");
+            setup.Website = GetUserInput(Resources.Init_Website, "http://our.umbraco.com");
 
-            setup.Licence = GetUserInput("Licence", "MIT");
+            setup.Licence = GetUserInput(Resources.Init_Licence, "MIT");
 
             // play it back for confirmation
-            Console.WriteLine($"About to write to {packageFile}");
+            Console.WriteLine(Resources.Init_Confirm, packageFile);
 
             var node = MakePackageFile(setup);
 
             Console.WriteLine(node.ToString());
 
-            var confirm = GetUserInput("Is this OK?", "yes").ToUpper();
+            var confirm = GetUserInput(Resources.Init_Prompt, "yes").ToUpper();
             if (confirm[0] == 'Y')
             {
                 node.Save(packageFile);
@@ -169,7 +173,7 @@ namespace Umbraco.Packager.CI.Verbs
                 }
                 else
                 {
-                    Console.WriteLine($"Invalid Version: \"{versionString}\"");
+                    Console.WriteLine(Resources.Init_InvalidVersion, versionString);
                 }
             }
         }
@@ -218,7 +222,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             if (!Directory.Exists(Path.GetDirectoryName(filePath)))
             {
-                Console.WriteLine($"The location where you want to put the package file doesn't exist [{Path.GetDirectoryName(filePath)}]");
+                Console.WriteLine(Resources.Init_MissingFolder, Path.GetDirectoryName(filePath));
                 Environment.Exit(2);
             }
 

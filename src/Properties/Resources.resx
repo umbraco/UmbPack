@@ -130,11 +130,53 @@ Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
 ------------------------------------------------------------------
     </value>
   </data>
-  <data name="InitHeader" xml:space="preserve">
+  <data name="Init.Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Init.Confirm" xml:space="preserve">
+    <value>About to write to {0}</value>
+  </data>
+  <data name="Init.Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Init.Header" xml:space="preserve">
     <value>This utility will walk you through creating a package.xml file.
 It only covers the most common items, and trys to guess sensible defaults
 
 see .. for definitive documentatio of those fields
 and excatly what they do</value>
+  </data>
+  <data name="Init.InvalidVersion" xml:space="preserve">
+    <value>Invalid Version: '{0}'</value>
+  </data>
+  <data name="Init.Licence" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="Init.MissingFolder" xml:space="preserve">
+    <value>The location where you want to put the package file doesn't exist [{0}]"</value>
+  </data>
+  <data name="Init.PackageName" xml:space="preserve">
+    <value>Package Name</value>
+  </data>
+  <data name="Init.Prompt" xml:space="preserve">
+    <value>It this OK?</value>
+  </data>
+  <data name="Init.UmbracoVersion" xml:space="preserve">
+    <value>Umbraco Version</value>
+  </data>
+  <data name="Init.Url" xml:space="preserve">
+    <value>Url</value>
+  </data>
+  <data name="Init.Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Init.Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="Pack.MissingXml" xml:space="preserve">
+    <value>Unable to locate the package.xml file {0}</value>
+  </data>
+  <data name="Push.Complete" xml:space="preserve">
+    <value>The package '{0}' was sucessfully uploaded to our.umbraco.com</value>
   </data>
 </root>
