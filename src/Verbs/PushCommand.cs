@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -9,7 +8,9 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using CommandLine;
+
 using Newtonsoft.Json;
+
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
