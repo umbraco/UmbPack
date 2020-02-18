@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using CommandLine;
 using Semver;
@@ -47,7 +48,7 @@ namespace Umbraco.Packager.CI.Verbs
     /// </remarks>
     internal static class PackCommand
     {
-        public static int RunAndReturn(PackOptions options)
+        public async static Task<int> RunAndReturn(PackOptions options)
         {
             // make sure the output directory exists
             Directory.CreateDirectory(options.OutputDirectory);

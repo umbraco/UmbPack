@@ -35,9 +35,9 @@ namespace Umbraco.Packager.CI
             var parserResults = parser.ParseArguments<PackOptions, PushOptions, InitOptions>(args);
 
             parserResults
-                .WithParsed<PackOptions>(opts => PackCommand.RunAndReturn(opts))
-                .WithParsed<PushOptions>(async opts => await PushCommand.RunAndReturn(opts))
-                .WithParsed<InitOptions>(opts => InitCommand.RunAndReturn(opts))
+                .WithParsed<PackOptions>(opts => PackCommand.RunAndReturn(opts).Wait())
+                .WithParsed<PushOptions>(opts => PushCommand.RunAndReturn(opts).Wait())
+                .WithParsed<InitOptions>(opts => InitCommand.RunAndReturn(opts).Wait())
                 .WithNotParsed(async errs => await DisplayHelp(parserResults, errs));
         }
 

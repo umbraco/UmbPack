@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Handlers;
@@ -26,6 +27,12 @@ namespace Umbraco.Packager.CI.Verbs
 
         [Option("Publish", Default = true, HelpText = "Makes this package the latest version")]
         public bool Publish { get; set; }
+
+        [Option("DotNetVersion", Default = "4.7.2", HelpText = "Chaange the DotNetVersion of the package")]
+        public string DotNetVersion { get; set; }
+
+        [Option("WorksWith", Default = "8.5.0", HelpText = "Compatable versions")]
+        public string WorksWith { get; set; }
     }
 
 
@@ -40,37 +47,32 @@ namespace Umbraco.Packager.CI.Verbs
 
             var apiKey = options.ApiKey;
 
-            // Check we can find the file
-            Verify.FilePath(filePath);
+            var packageHelper = new PackageHelper();
 
-            // Check File is a ZIP
-            Verify.IsZip(filePath);
+            // Check we can find the file
+            packageHelper.EnsurePackageExists(filePath);
+
+            // Check File is a ZIP          
+            packageHelper.EnsureIsZip(filePath);
 
             // Check zip contains valid package.xml
-            Verify.ContainsPackageXml(filePath);
+            packageHelper.EnsureContainsPackageXml(filePath);
 
-            // Verify API Key is valid with our.umbraco.com
-            await Verify.ApiKeyIsValid(apiKey);
+            // gets a package list from our.umbraco
+            // if the api key is invalid we will also find out here.
+            var packages = await packageHelper.GetPackageList(apiKey);
+
+            if (packages != null)
+            { 
+                packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath);
+            }
 
             // Parse package.xml before upload to print out info
             // and to use for comparisson on what is already uploaded
             var packageInfo = Parse.PackageXml(filePath);
 
-            // Prompt all the things
-            // .NET Version
-            // filetype: Package or HotFix (P or H)
-            // 
-
-
-            // The API token check - WebAPI needs to respond with list of current files
-            // Verify same file name does not already exist on our.umb
-            // Verify we have a newer version that latest/current file for project
-
-            // TODO: Check PackageInfo.Version from Parse does not exist in WebAPI of current files
-
             // OK all checks passed - time to upload it
-            // With a nice progress bar
-            await UploadPackage(filePath, apiKey);
+            await UploadPackage(options);
 
             // Got this far then it got uploaded to our.umb all OK
             Console.WriteLine(Resources.Push_Complete, filePath);
@@ -78,10 +80,11 @@ namespace Umbraco.Packager.CI.Verbs
             return 0;
         }
 
-        private static async Task UploadPackage(string filePath, string apiKey)
+        private static async Task UploadPackage(PushOptions options)
         {
             try
             {
+                Console.WriteLine("Pushing {0}", options.Package);
                 // HttpClient will use this event handler to give us
                 // Reporting on how its progress the file upload
                 var processMsgHander = new ProgressMessageHandler(new HttpClientHandler());
@@ -91,17 +94,12 @@ namespace Umbraco.Packager.CI.Verbs
                     var percent = e.ProgressPercentage;
                 };
 
-                using (var client = new HttpClient(processMsgHander))
+                var packageHelper = new PackageHelper();
+
+                using (var client = packageHelper.GetClientBase(options.ApiKey))
                 {
-                    //client.BaseAddress = new Uri("http://localhost:24292");
-                    //client.BaseAddress = new Uri("http://our.umbraco.local");
-                    client.BaseAddress = new Uri("http://ourumb.eu.ngrok.io");
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
                     MultipartFormDataContent form = new MultipartFormDataContent();
-                    var fileInfo = new FileInfo(filePath);
+                    var fileInfo = new FileInfo(options.Package);
                     var content = new StreamContent(fileInfo.OpenRead());
                     content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                     {
@@ -109,36 +107,50 @@ namespace Umbraco.Packager.CI.Verbs
                         FileName = fileInfo.Name
                     };
                     form.Add(content);
-                    form.Add(new StringContent("true"), "isCurrent");
-                    form.Add(new StringContent("4.7.2"), "dotNetVersion");
+                    form.Add(new StringContent(options.Publish.ToString()), "isCurrent");
+                    form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
                     form.Add(new StringContent("package"), "fileType");
-                    form.Add(new StringContent("[{Version: '8.3.0'}]"), "umbracoVersions");
+                    form.Add(GetVersionCompatability(options.WorksWith), "umbracoVersions");
 
                     var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Error.WriteLine("API Key is invalid");
-                        Console.ResetColor();
-
-                        // ERROR_ACCESS_DENIED
-                        Environment.Exit(5);
+                        packageHelper.WriteError("Api Key is invalid");
+                        Environment.Exit(5); // ERROR_ACCESS_DENIED
                     }
                     else if (httpResponse.IsSuccessStatusCode)
                     {
-                        // Get the JSON string content which gives us a list
-                        // of current Umbraco Package .zips for this project
+                        Console.WriteLine("Done");
                         var apiReponse = await httpResponse.Content.ReadAsStringAsync();
-                        Console.WriteLine(apiReponse);
+                        // Console.WriteLine(apiReponse);
                     }
                 }
             }
             catch (HttpRequestException ex)
             {
                 // Could get network error or our.umb down
+                Console.WriteLine("error {0}", ex);
                 throw;
             }
         }
 
+
+
+        /// <summary>
+        ///  returns the version compatability string for uploading the package
+        /// </summary>
+        /// <param name="worksWithString"></param>
+        /// <returns></returns>
+        private static StringContent GetVersionCompatability(string worksWithString)
+        {
+            // TODO: Workout how we can get a latest version from our ? 
+            // TODO: Maybe accept wild cards (8.* -> 8.5.0,8.4.0,8.3.0)
+            // TODO: Work like nuget e.g '> 8.4.0' 
+            var versions = worksWithString
+                                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                .Select(x => $"'{x}'");
+
+            return new StringContent(string.Format("[{{Versions: {0}}}]", string.Join(",", versions)));
+        }
     }
 }

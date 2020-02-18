@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using CommandLine;
@@ -38,7 +39,7 @@ namespace Umbraco.Packager.CI.Verbs
     /// </remarks>
     internal static class InitCommand
     {
-        public static void RunAndReturn(InitOptions options)
+        public async static Task<int> RunAndReturn(InitOptions options)
         {
 
             if (!string.IsNullOrWhiteSpace(options.NuSpecFile))
@@ -88,6 +89,8 @@ namespace Umbraco.Packager.CI.Verbs
             {
                 Environment.Exit(1);
             }
+
+            return 1;
         }
 
         /// <summary>
