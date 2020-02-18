@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using CommandLine;
+using Newtonsoft.Json;
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
@@ -25,13 +27,13 @@ namespace Umbraco.Packager.CI.Verbs
         [Option("Key", HelpText = "ApiKey")]
         public string ApiKey { get; set; }
 
-        [Option("Publish", Default = true, HelpText = "Makes this package the latest version")]
-        public bool Publish { get; set; }
+        [Option("Publish", Default = "true", HelpText = "Makes this package the latest version")]
+        public string Publish { get; set; }
 
         [Option("DotNetVersion", Default = "4.7.2", HelpText = "Chaange the DotNetVersion of the package")]
         public string DotNetVersion { get; set; }
 
-        [Option("WorksWith", Default = "8.5.0", HelpText = "Compatable versions")]
+        [Option("WorksWith", Default = "v850", HelpText = "Compatable versions")]
         public string WorksWith { get; set; }
     }
 
@@ -84,7 +86,6 @@ namespace Umbraco.Packager.CI.Verbs
         {
             try
             {
-                Console.WriteLine("Pushing {0}", options.Package);
                 // HttpClient will use this event handler to give us
                 // Reporting on how its progress the file upload
                 var processMsgHander = new ProgressMessageHandler(new HttpClientHandler());
@@ -95,6 +96,8 @@ namespace Umbraco.Packager.CI.Verbs
                 };
 
                 var packageHelper = new PackageHelper();
+
+                Console.Write($"Uploading {Path.GetFileName(options.Package)} to our.umbraco.com ...");
 
                 using (var client = packageHelper.GetClientBase(options.ApiKey))
                 {
@@ -107,7 +110,7 @@ namespace Umbraco.Packager.CI.Verbs
                         FileName = fileInfo.Name
                     };
                     form.Add(content);
-                    form.Add(new StringContent(options.Publish.ToString()), "isCurrent");
+                    form.Add(new StringContent(ParsePublishFlag(options.Publish)), "isCurrent");
                     form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
                     form.Add(new StringContent("package"), "fileType");
                     form.Add(GetVersionCompatability(options.WorksWith), "umbracoVersions");
@@ -120,7 +123,7 @@ namespace Umbraco.Packager.CI.Verbs
                     }
                     else if (httpResponse.IsSuccessStatusCode)
                     {
-                        Console.WriteLine("Done");
+                        Console.WriteLine("Complete");
                         var apiReponse = await httpResponse.Content.ReadAsStringAsync();
                         // Console.WriteLine(apiReponse);
                     }
@@ -148,9 +151,25 @@ namespace Umbraco.Packager.CI.Verbs
             // TODO: Work like nuget e.g '> 8.4.0' 
             var versions = worksWithString
                                 .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                                .Select(x => $"'{x}'");
+                                .Select(x => new UmbracoVersion() { Version = x });
 
-            return new StringContent(string.Format("[{{Versions: {0}}}]", string.Join(",", versions)));
+            return new StringContent(JsonConvert.SerializeObject(versions));
+        }
+
+        private static string ParsePublishFlag(string publish)
+        {
+            if (bool.TryParse(publish, out bool result))
+            {
+                return result.ToString();
+            }
+
+            return false.ToString();
+        }
+
+        private class UmbracoVersion
+        {
+            public string Version { get; set; }
+            public string Name { get; set; }
         }
     }
 }

@@ -46,11 +46,10 @@ namespace Umbraco.Packager.CI
                 }
             }
 
-            Console.WriteLine("Parsing package.xml");
+            Console.WriteLine("Extracting info form package.xml file");
             Console.WriteLine($"Name: {packageDetails.Name}");
-            Console.WriteLine($"Version: {packageDetails.VersionString}");
-            Console.WriteLine(Environment.NewLine);
-
+            Console.WriteLine($"Version: {packageDetails.VersionString}\n");
+            
             return packageDetails;
         }
     }
