@@ -13,7 +13,9 @@
     <Company>The Umbraco Community</Company>
     <AssemblyVersion>1.0.2.0</AssemblyVersion>
     <FileVersion>1.0.2.0</FileVersion>
-    <InformationalVersion>1.0.1.0</InformationalVersion>    
+    <InformationalVersion>1.0.1.0</InformationalVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Umbraco</PackageTags>     
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,5 +38,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  
+  
 
 </Project>

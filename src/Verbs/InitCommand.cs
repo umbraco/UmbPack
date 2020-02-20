@@ -47,7 +47,9 @@ namespace Umbraco.Packager.CI.Verbs
                 Environment.Exit(1);
             }
 
-            var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var currentFolder = AppContext.BaseDirectory;
+
+
             var packageFile = GetPackageFile(options.PackageFile);
 
             var setup = new PackageSetup();
@@ -206,7 +208,7 @@ namespace Umbraco.Packager.CI.Verbs
         /// <param name="packageFile">path to a package file</param>
         private static string GetPackageFile(string packageFile)
         {
-            var currentFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var currentFolder = Path.GetDirectoryName(AppContext.BaseDirectory);
             var filePath = Path.Combine(currentFolder, "package.xml");
 
             if (!string.IsNullOrWhiteSpace(packageFile))
