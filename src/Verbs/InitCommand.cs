@@ -15,16 +15,20 @@ namespace Umbraco.Packager.CI.Verbs
     /// <summary>
     ///  Command line options for the Init verb
     /// </summary>
-    [Verb("init", HelpText = "Initializes a package.xml file")]
+    [Verb("init", HelpText = "HelpInit", ResourceType = typeof(HelpTextResource))]
     public class InitOptions
     {
         [Value(0,
-            MetaName = "Package File",
-            HelpText = "Path to where package file should be created")]
-        public string PackageFile { get; set; }
+            MetaName = "Folder",
+            HelpText = "HelpInitFolder", ResourceType = typeof(HelpTextResource))]
+        public string Folder { get; set; }
 
-        [Option("nuspec", HelpText = "Use a nuspec file as a starting point")]
+        /* (not supportd yet)  
+        [Option("nuspec", 
+            HelpText = "HelpTextNuspec",
+            ResourceType = typeof(HelpTextResource))]
         public string NuSpecFile { get; set; }
+        */
     }
 
 
@@ -37,60 +41,60 @@ namespace Umbraco.Packager.CI.Verbs
     /// </remarks>
     internal static class InitCommand
     {
-        public async static Task<int> RunAndReturn(InitOptions options)
+        public static void RunAndReturn(InitOptions options)
         {
+            var path = string.IsNullOrWhiteSpace(options.Folder) ? "." : options.Folder;
 
-            if (!string.IsNullOrWhiteSpace(options.NuSpecFile))
-            {
-                // TODO: spawn from a nuspec.
-                Console.WriteLine("Creating from a nuspec file is not yet supported.");
-                Environment.Exit(1);
-            }
+            var currentFolder = new DirectoryInfo(path);
 
-            var currentFolder = AppContext.BaseDirectory;
-
-
-            var packageFile = GetPackageFile(options.PackageFile);
+            var packageFile = GetPackageFile(options.Folder);
 
             var setup = new PackageSetup();
 
             Console.WriteLine(Resources.Init_Header);
+            Console.WriteLine();
 
-            setup.Name = GetUserInput(Resources.Init_PackageName, Path.GetFileName(currentFolder));
+            // gather all the user input
 
-            setup.Description = GetUserInput(Resources.Init_Description, "Another Awesome Umbraco Package");
+            setup.Name = GetUserInput(Resources.Init_PackageName, Path.GetFileName(currentFolder.Name));
 
-            setup.Version = GetVersionString(Resources.Init_Version, "1.0.0");
+            setup.Description = GetUserInput(Resources.Init_Description, Defaults.Init_Description);
 
-            setup.Url = GetUserInput(Resources.Init_Url, "http://our.umbraco.com");
+            setup.Version = GetVersionString(Resources.Init_Version, Defaults.Init_Version);
 
-            setup.UmbracoVersion = GetVersionString(Resources.Init_UmbracoVersion, "8.0.0");
+            setup.Url = GetUserInput(Resources.Init_Url, Defaults.Init_Url);
+
+            setup.UmbracoVersion = GetVersionString(Resources.Init_UmbracoVersion, Defaults.Init_UmbracoVersion);
 
             setup.Author = GetUserInput(Resources.Init_Author, Environment.UserName);
 
-            setup.Website = GetUserInput(Resources.Init_Website, "http://our.umbraco.com");
+            setup.Website = GetUserInput(Resources.Init_Website, Defaults.Init_Website);
 
-            setup.Licence = GetUserInput(Resources.Init_Licence, "MIT");
+            setup.Licence = GetUserInput(Resources.Init_Licence, Defaults.Init_Licence);
 
             // play it back for confirmation
+            Console.WriteLine();
             Console.WriteLine(Resources.Init_Confirm, packageFile);
 
             var node = MakePackageFile(setup);
 
-            Console.WriteLine(node.ToString());
+            Console.WriteLine(node.Element("info").ToString());
 
-            var confirm = GetUserInput(Resources.Init_Prompt, "yes").ToUpper();
+            // confirm 
+
+            var confirm = GetUserInput(Resources.Init_Prompt, Defaults.Init_Prompt).ToUpper();
             if (confirm[0] == 'Y')
             {
+                // save xml to disk.
+
                 node.Save(packageFile);
+                Console.WriteLine(Resources.Init_Complete);
                 Environment.Exit(0);
             }
             else
             {
                 Environment.Exit(1);
             }
-
-            return 1;
         }
 
         /// <summary>
@@ -209,7 +213,7 @@ namespace Umbraco.Packager.CI.Verbs
         private static string GetPackageFile(string packageFile)
         {
             var currentFolder = Path.GetDirectoryName(AppContext.BaseDirectory);
-            var filePath = Path.Combine(currentFolder, "package.xml");
+            var filePath = Path.Combine(".", "package.xml");
 
             if (!string.IsNullOrWhiteSpace(packageFile))
             {

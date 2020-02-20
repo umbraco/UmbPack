@@ -10,20 +10,22 @@ using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
 {
-    [Verb("pack", HelpText = "Create an umbraco package from a folder or package.xml file")]
+    [Verb("pack", HelpText = "HelpPack", ResourceType = typeof(HelpTextResource))]
     public class PackOptions
     {
         [Value(0, MetaName = "file/folder", Required = true,
-            HelpText = "package.xml file or folder you want to crate package for")]
+            HelpText = "HelpPackFile", ResourceType = typeof(HelpTextResource))]
         public string FolderOrFile { get; set; }
 
-        [Option("OutputDirectory",
-            HelpText = "Specifies the directory for the created umbraco package, If not specified, uses the current directory",
+        [Option('o', "OutputDirectory",
+            HelpText = "HelpPackOutput", 
+            ResourceType = typeof(HelpTextResource),
             Default = ".")]
         public string OutputDirectory { get; set; }
 
-        [Option("Version",
-            HelpText = "Overrides the version defined in the package.xml file")]
+        [Option('v', "Version",
+            HelpText = "HelpPackVersion",
+            ResourceType = typeof(HelpTextResource))]
         public string Version { get; set; }
     }
 
@@ -75,11 +77,11 @@ namespace Umbraco.Packager.CI.Verbs
                 // a folder - we assume the package.xml is in that folder
                 isFolder = true;
                 packageFile = Path.Combine(options.FolderOrFile, "package.xml");
-                Console.WriteLine("Building package from folder: {0}", options.FolderOrFile);
+                Console.WriteLine(Resources.Pack_BuildingFolder, options.FolderOrFile);
             }
             else
             {
-                Console.WriteLine("Building package from package.xml file contents");
+                Console.WriteLine(Resources.Pack_BuildingFile);
             }
 
             if (!File.Exists(packageFile))
@@ -88,7 +90,7 @@ namespace Umbraco.Packager.CI.Verbs
                 Environment.Exit(2);
             }
 
-            Console.WriteLine("Loading Package File: {0}", packageFile);
+            Console.WriteLine(Resources.Pack_LoadingFile, packageFile);
             Console.WriteLine("----------------------------------------");
 
             // load the package xml
@@ -170,9 +172,12 @@ namespace Umbraco.Packager.CI.Verbs
         }
 
 
+        /// <summary>
+        ///  Adds all the files in one folder (and sub folders) to the package directory.
+        /// </summary>
         private static void AddFilesFromFolders(string sourceFolder, string dest, string prefix = "")
         {
-            Console.WriteLine("Adding Folder: {0}", sourceFolder);
+            Console.WriteLine(Resources.Pack_AddingFolder, sourceFolder);
 
             foreach(var file in Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories))
             {
@@ -180,17 +185,22 @@ namespace Umbraco.Packager.CI.Verbs
 
                 var destination = Path.Combine(prefix, dest, relative);
 
-                Console.WriteLine("  File: {0}", Path.Combine(sourceFolder, relative));
+                Console.WriteLine(Resources.Pack_AddingSingle, relative, dest);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 File.Copy(file, destination);
             }
         }
 
+        /// <summary>
+        ///  adds a single file to the package folder. 
+        /// </summary>
         private static void AddFile(string sourceFile, string dest, string prefix = "")
         {
-            Console.WriteLine("Adding File: {0}", dest);
             var destination = Path.Combine(prefix, dest);
+            Console.WriteLine(Resources.Pack_AddingSingle, sourceFile, dest);
+
+            Directory.CreateDirectory(Path.GetDirectoryName(destination));
             File.Copy(sourceFile, destination);
         }
 
@@ -275,13 +285,13 @@ namespace Umbraco.Packager.CI.Verbs
                 if (File.Exists(zipFileName))
                     File.Delete(zipFileName);
 
-                Console.WriteLine("Saving Package to {0}", zipFileName);
+                Console.WriteLine(Resources.Pack_SavingPackage, zipFileName);
 
                 ZipFile.CreateFromDirectory(folder, zipFileName);
             }
             else
             {
-                Console.WriteLine("Build Directory {0} doesn't exist", folder);
+                Console.WriteLine(Resources.Pack_DirectoryMissing, folder);
             }
         }
 

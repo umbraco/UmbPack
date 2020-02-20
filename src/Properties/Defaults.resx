@@ -117,122 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Ascaii" xml:space="preserve">
-    <value>
-                        888
-                        888
-888   888 88888b.d88b.  88888b.  888d888 8888b.   .d8888b  .d88b.
-888   888 888 "888 "88b 888 "88b 888P"      "88b d88P"    d88""88b
-888   888 888  888  888 888  888 888    .d888888 888      888  888
-Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
- "Y888P"  888  888  888 88888P"  888    "Y888888  "Y8888P  "Y88P"
-
-------------------------------------------------------------------
-    </value>
+  <data name="Init_Description" xml:space="preserve">
+    <value>Another awesome package</value>
   </data>
-  <data name="Error" xml:space="preserve">
-    <value>Error: {0}</value>
+  <data name="Init_Licence" xml:space="preserve">
+    <value>MIT</value>
   </data>
-  <data name="HelpFooter" xml:space="preserve">
-    <value>For more information see ?? </value>
+  <data name="Init_Prompt" xml:space="preserve">
+    <value>yes</value>
   </data>
-  <data name="Init.Author" xml:space="preserve">
-    <value>Author</value>
+  <data name="Init_UmbracoVersion" xml:space="preserve">
+    <value>8.0.0</value>
+    <comment>The default minimum version the package will work on</comment>
   </data>
-  <data name="Init.Complete" xml:space="preserve">
-    <value>Package file saved</value>
+  <data name="Init_Url" xml:space="preserve">
+    <value>https://our.umbraco.com</value>
   </data>
-  <data name="Init.Confirm" xml:space="preserve">
-    <value>About to write to {0}</value>
+  <data name="Init_Version" xml:space="preserve">
+    <value>1.0.0</value>
   </data>
-  <data name="Init.Description" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="Init.Header" xml:space="preserve">
-    <value>This utility will walk you through creating a package.xml file.
-It only covers the most common items, and trys to guess sensible defaults
-
-see ??? for definitive documentation of those fields and excatly what they do</value>
-  </data>
-  <data name="Init.InvalidVersion" xml:space="preserve">
-    <value>Invalid Version: '{0}'</value>
-  </data>
-  <data name="Init.Licence" xml:space="preserve">
-    <value>Licence</value>
-  </data>
-  <data name="Init.MissingFolder" xml:space="preserve">
-    <value>The location '{0}' where you want to put the package file doesn't exist.</value>
-  </data>
-  <data name="Init.PackageName" xml:space="preserve">
-    <value>Package Name</value>
-  </data>
-  <data name="Init.Prompt" xml:space="preserve">
-    <value>It this OK?</value>
-  </data>
-  <data name="Init.UmbracoVersion" xml:space="preserve">
-    <value>Umbraco Version</value>
-  </data>
-  <data name="Init.Url" xml:space="preserve">
-    <value>Url</value>
-  </data>
-  <data name="Init.Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="Init.Website" xml:space="preserve">
-    <value>Website</value>
-  </data>
-  <data name="Pack.AddingFolder" xml:space="preserve">
-    <value>Adding Folder: {0}</value>
-  </data>
-  <data name="Pack.AddingSingle" xml:space="preserve">
-    <value>Adding: {0} to {1}</value>
-  </data>
-  <data name="Pack.BuildingFile" xml:space="preserve">
-    <value>Building package from package.xml file contents</value>
-  </data>
-  <data name="Pack.BuildingFolder" xml:space="preserve">
-    <value>Building package from folder: {0}</value>
-  </data>
-  <data name="Pack.DirectoryMissing" xml:space="preserve">
-    <value>Build Directory {0} doesn't exist</value>
-  </data>
-  <data name="Pack.LoadingFile" xml:space="preserve">
-    <value>Loading Package File: {0}</value>
-  </data>
-  <data name="Pack.MissingXml" xml:space="preserve">
-    <value>Unable to locate the package.xml file {0}</value>
-  </data>
-  <data name="Pack.SavingPackage" xml:space="preserve">
-    <value>Saving Package to {0}</value>
-  </data>
-  <data name="Push.ApiKeyInvalid" xml:space="preserve">
-    <value>Api Key is invalid</value>
-  </data>
-  <data name="Push.Complete" xml:space="preserve">
-    <value>The package '{0}' was sucessfully uploaded to our.umbraco.com</value>
-  </data>
-  <data name="Push.Extracting" xml:space="preserve">
-    <value>Extracting info form package.xml file</value>
-  </data>
-  <data name="Push.FileNotZip" xml:space="preserve">
-    <value>Umbraco package file '{0}' must be a .zip</value>
-  </data>
-  <data name="Push.InvalidXml" xml:space="preserve">
-    <value>Invalid package.xml</value>
-  </data>
-  <data name="Push.MissingFile" xml:space="preserve">
-    <value>Cannot find file {0}</value>
-  </data>
-  <data name="Push.MissingPackageNode" xml:space="preserve">
-    <value>Unable to find //umbPackage/info/package in XML</value>
-  </data>
-  <data name="Push.NoPackageXml" xml:space="preserve">
-    <value>Umbraco package file '{0}' does not contain a package.xml file</value>
-  </data>
-  <data name="Push.PackageExists" xml:space="preserve">
-    <value>A package file named '{0}' already exists for this package</value>
-  </data>
-  <data name="Push.Uploading" xml:space="preserve">
-    <value>Uploading {0} to our.umbraco.com ...</value>
+  <data name="Init_Website" xml:space="preserve">
+    <value>https://our.umbraco.com</value>
   </data>
 </root>

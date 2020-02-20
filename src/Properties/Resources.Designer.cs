@@ -80,11 +80,38 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error: {0}.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For more information see ?? .
+        /// </summary>
+        internal static string HelpFooter {
+            get {
+                return ResourceManager.GetString("HelpFooter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Author.
         /// </summary>
         internal static string Init_Author {
             get {
                 return ResourceManager.GetString("Init.Author", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package file saved.
+        /// </summary>
+        internal static string Init_Complete {
+            get {
+                return ResourceManager.GetString("Init.Complete", resourceCulture);
             }
         }
         
@@ -110,8 +137,7 @@ namespace Umbraco.Packager.CI.Properties {
         ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
         ///It only covers the most common items, and trys to guess sensible defaults
         ///
-        ///see .. for definitive documentatio of those fields
-        ///and excatly what they do.
+        ///see ??? for definitive documentation of those fields and excatly what they do.
         /// </summary>
         internal static string Init_Header {
             get {
@@ -138,7 +164,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The location where you want to put the package file doesn&apos;t exist [{0}]&quot;.
+        ///   Looks up a localized string similar to The location &apos;{0}&apos; where you want to put the package file doesn&apos;t exist..
         /// </summary>
         internal static string Init_MissingFolder {
             get {
@@ -201,6 +227,60 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adding Folder: {0}.
+        /// </summary>
+        internal static string Pack_AddingFolder {
+            get {
+                return ResourceManager.GetString("Pack.AddingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adding: {0} to {1}.
+        /// </summary>
+        internal static string Pack_AddingSingle {
+            get {
+                return ResourceManager.GetString("Pack.AddingSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Building package from package.xml file contents.
+        /// </summary>
+        internal static string Pack_BuildingFile {
+            get {
+                return ResourceManager.GetString("Pack.BuildingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Building package from folder: {0}.
+        /// </summary>
+        internal static string Pack_BuildingFolder {
+            get {
+                return ResourceManager.GetString("Pack.BuildingFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build Directory {0} doesn&apos;t exist.
+        /// </summary>
+        internal static string Pack_DirectoryMissing {
+            get {
+                return ResourceManager.GetString("Pack.DirectoryMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading Package File: {0}.
+        /// </summary>
+        internal static string Pack_LoadingFile {
+            get {
+                return ResourceManager.GetString("Pack.LoadingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to locate the package.xml file {0}.
         /// </summary>
         internal static string Pack_MissingXml {
@@ -210,11 +290,101 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saving Package to {0}.
+        /// </summary>
+        internal static string Pack_SavingPackage {
+            get {
+                return ResourceManager.GetString("Pack.SavingPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Api Key is invalid.
+        /// </summary>
+        internal static string Push_ApiKeyInvalid {
+            get {
+                return ResourceManager.GetString("Push.ApiKeyInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package &apos;{0}&apos; was sucessfully uploaded to our.umbraco.com.
         /// </summary>
         internal static string Push_Complete {
             get {
                 return ResourceManager.GetString("Push.Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting info form package.xml file.
+        /// </summary>
+        internal static string Push_Extracting {
+            get {
+                return ResourceManager.GetString("Push.Extracting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Umbraco package file &apos;{0}&apos; must be a .zip.
+        /// </summary>
+        internal static string Push_FileNotZip {
+            get {
+                return ResourceManager.GetString("Push.FileNotZip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid package.xml.
+        /// </summary>
+        internal static string Push_InvalidXml {
+            get {
+                return ResourceManager.GetString("Push.InvalidXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot find file {0}.
+        /// </summary>
+        internal static string Push_MissingFile {
+            get {
+                return ResourceManager.GetString("Push.MissingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find //umbPackage/info/package in XML.
+        /// </summary>
+        internal static string Push_MissingPackageNode {
+            get {
+                return ResourceManager.GetString("Push.MissingPackageNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Umbraco package file &apos;{0}&apos; does not contain a package.xml file.
+        /// </summary>
+        internal static string Push_NoPackageXml {
+            get {
+                return ResourceManager.GetString("Push.NoPackageXml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A package file named &apos;{0}&apos; already exists for this package.
+        /// </summary>
+        internal static string Push_PackageExists {
+            get {
+                return ResourceManager.GetString("Push.PackageExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading {0} to our.umbraco.com ....
+        /// </summary>
+        internal static string Push_Uploading {
+            get {
+                return ResourceManager.GetString("Push.Uploading", resourceCulture);
             }
         }
     }

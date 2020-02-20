@@ -26,6 +26,7 @@ namespace Umbraco.Packager.CI
 
             var parser = new CommandLine.Parser(with => {
                 with.HelpWriter = null;
+                // with.HelpWriter = Console.Out;
                 with.AutoVersion = false;
                 with.CaseSensitive = false;
             } );
@@ -37,7 +38,7 @@ namespace Umbraco.Packager.CI
             parserResults
                 .WithParsed<PackOptions>(opts => PackCommand.RunAndReturn(opts).Wait())
                 .WithParsed<PushOptions>(opts => PushCommand.RunAndReturn(opts).Wait())
-                .WithParsed<InitOptions>(opts => InitCommand.RunAndReturn(opts).Wait())
+                .WithParsed<InitOptions>(opts => InitCommand.RunAndReturn(opts))
                 .WithNotParsed(async errs => await DisplayHelp(parserResults, errs));
         }
 
@@ -51,6 +52,7 @@ namespace Umbraco.Packager.CI
             
             // Append header with Ascaii Art
             helpText.Heading = Resources.Ascaii + Environment.NewLine + helpText.Heading;
+            helpText.AddPostOptionsText(Resources.HelpFooter);
             Console.WriteLine(helpText);
 
             // --version or --help

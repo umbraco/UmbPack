@@ -15,7 +15,8 @@
     <FileVersion>1.0.2.0</FileVersion>
     <InformationalVersion>1.0.1.0</InformationalVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageTags>Umbraco</PackageTags>     
+    <PackageTags>Umbraco</PackageTags>
+    <Version>1.0.2</Version>     
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Defaults.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Defaults.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\HelpTextResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HelpTextResource.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -33,6 +44,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Properties\Defaults.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Defaults.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\HelpTextResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HelpTextResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

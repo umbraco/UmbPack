@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI
 {
@@ -20,7 +21,7 @@ namespace Umbraco.Packager.CI
         {
             if (File.Exists(packagePath) == false)
             {
-                WriteError($"Cannot find file {packagePath}");
+                WriteError(Resources.Push_MissingFile, packagePath);
                 Environment.Exit(2); // ERROR_FILE_NOT_FOUND=2
             }
         }
@@ -32,7 +33,7 @@ namespace Umbraco.Packager.CI
         {
             if (Path.GetExtension(packagePath).ToLowerInvariant() != ".zip")
             {
-                WriteError($"Umbraco package file '{packagePath}' must be a .zip");
+                WriteError(Resources.Push_FileNotZip, packagePath);
                 Environment.Exit(123);  // ERROR_INVALID_NAME=123
             }
         }
@@ -47,8 +48,8 @@ namespace Umbraco.Packager.CI
                 var packageXmlFileExists = archive.Entries.Any(x => string.Equals(x.Name, "package.xml", StringComparison.InvariantCultureIgnoreCase));
                 if (packageXmlFileExists == false)
                 {
-                    WriteError($"Umbraco package file '{packagePath}' does not contain a package.xml file");
-                    
+                    WriteError(Resources.Push_NoPackageXml, packagePath);
+                   
                     Environment.Exit(222); // ERROR_BAD_FILE_TYPE=222
                 }
             }
@@ -68,7 +69,7 @@ namespace Umbraco.Packager.CI
                     
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        WriteError("API Key is invalid");
+                        WriteError(Resources.Push_ApiKeyInvalid);
                         Environment.Exit(5); // ERROR_ACCESS_DENIED
                     }
                     else if (httpResponse.IsSuccessStatusCode)
@@ -99,7 +100,7 @@ namespace Umbraco.Packager.CI
                 var packageName = package.Value<string>("Name"); 
                 if (packageName.Equals(packageFileName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    WriteError($"A package file named '{packageFileName}' already exists for this package");
+                    WriteError(Resources.Push_PackageExists, packageFileName);
                     Environment.Exit(80); // FILE_EXISTS
                 }
             }
@@ -108,10 +109,10 @@ namespace Umbraco.Packager.CI
         /// <summary>
         ///  change the colour of the console, write an error and reset the colour back.
         /// </summary>
-        public void WriteError(string error)
+        public void WriteError(string error, params object[] parameters)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Error.WriteLine(error);
+            Console.Error.WriteLine(error, parameters);
             Console.ResetColor();
         }
 

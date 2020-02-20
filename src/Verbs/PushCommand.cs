@@ -18,23 +18,26 @@ namespace Umbraco.Packager.CI.Verbs
     /// <summary>
     ///  Options for the Push verb
     /// </summary>
-    [Verb("push", HelpText = "Pushes an umbraco package to our.umbraco.com")]
+    [Verb("push", HelpText = "HelpPush", ResourceType = typeof(HelpTextResource))]
     public class PushOptions
     {
         [Value(0, MetaName = "package.zip", Required = true,
-            HelpText = "Path to the package zip you want to push")]
+            HelpText = "HelpPushPackage", ResourceType = typeof(HelpTextResource))]
         public string Package { get; set; }
 
-        [Option("Key", HelpText = "ApiKey")]
+        [Option('k', "Key", HelpText = "HelpPushKey", ResourceType = typeof(HelpTextResource))]
         public string ApiKey { get; set; }
 
-        [Option("Publish", Default = "true", HelpText = "Makes this package the latest version")]
+        [Option('p', "Publish", Default = "true", 
+            HelpText = "HelpPushPublish", ResourceType = typeof(HelpTextResource))]
         public string Publish { get; set; }
 
-        [Option("DotNetVersion", Default = "4.7.2", HelpText = "Chaange the DotNetVersion of the package")]
+        [Option("DotNetVersion", Default = "4.7.2", 
+            HelpText = "HelpPushDotNet", ResourceType = typeof(HelpTextResource))]
         public string DotNetVersion { get; set; }
 
-        [Option("WorksWith", Default = "v850", HelpText = "Compatable versions")]
+        [Option('w', "WorksWith", Default = "v850", 
+            HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
     }
 
@@ -98,7 +101,7 @@ namespace Umbraco.Packager.CI.Verbs
 
                 var packageHelper = new PackageHelper();
 
-                Console.Write($"Uploading {Path.GetFileName(options.Package)} to our.umbraco.com ...");
+                Console.Write(Resources.Push_Uploading, Path.GetFileName(options.Package));
 
                 using (var client = packageHelper.GetClientBase(options.ApiKey))
                 {
@@ -119,12 +122,12 @@ namespace Umbraco.Packager.CI.Verbs
                     var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        packageHelper.WriteError("Api Key is invalid");
+                        packageHelper.WriteError(Resources.Push_ApiKeyInvalid);
                         Environment.Exit(5); // ERROR_ACCESS_DENIED
                     }
                     else if (httpResponse.IsSuccessStatusCode)
                     {
-                        Console.WriteLine("Complete");
+                        Console.WriteLine(Resources.Push_Complete);
                         var apiReponse = await httpResponse.Content.ReadAsStringAsync();
                         // Console.WriteLine(apiReponse);
                     }
@@ -133,7 +136,7 @@ namespace Umbraco.Packager.CI.Verbs
             catch (HttpRequestException ex)
             {
                 // Could get network error or our.umb down
-                Console.WriteLine("error {0}", ex);
+                Console.WriteLine(Resources.Error, ex);
                 throw;
             }
         }
