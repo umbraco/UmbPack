@@ -227,7 +227,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adding Folder: {0}.
+        ///   Looks up a localized string similar to     - Adding Folder: {0}.
         /// </summary>
         internal static string Pack_AddingFolder {
             get {
@@ -236,7 +236,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adding: {0} to {1}.
+        ///   Looks up a localized string similar to     - Adding: {0} to {1}.
         /// </summary>
         internal static string Pack_AddingSingle {
             get {
@@ -245,7 +245,16 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Building package from package.xml file contents.
+        ///   Looks up a localized string similar to  - Adding files to package.
+        /// </summary>
+        internal static string Pack_AddPackageFiles {
+            get {
+                return ResourceManager.GetString("Pack.AddPackageFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Building package from package from package.xml.
         /// </summary>
         internal static string Pack_BuildingFile {
             get {
@@ -263,6 +272,24 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  - Building package.
+        /// </summary>
+        internal static string Pack_BuildPackage {
+            get {
+                return ResourceManager.GetString("Pack.BuildPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete.
+        /// </summary>
+        internal static string Pack_Complete {
+            get {
+                return ResourceManager.GetString("Pack.Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Build Directory {0} doesn&apos;t exist.
         /// </summary>
         internal static string Pack_DirectoryMissing {
@@ -272,7 +299,16 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading Package File: {0}.
+        ///   Looks up a localized string similar to  - Getting Package Name.
+        /// </summary>
+        internal static string Pack_GetPackageName {
+            get {
+                return ResourceManager.GetString("Pack.GetPackageName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  - Loading Package File: {0}.
         /// </summary>
         internal static string Pack_LoadingFile {
             get {
@@ -290,11 +326,20 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saving Package to {0}.
+        ///   Looks up a localized string similar to  - Saving Package to {0}.
         /// </summary>
         internal static string Pack_SavingPackage {
             get {
                 return ResourceManager.GetString("Pack.SavingPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  - Updating package version.
+        /// </summary>
+        internal static string Pack_UpdatingVersion {
+            get {
+                return ResourceManager.GetString("Pack.UpdatingVersion", resourceCulture);
             }
         }
         

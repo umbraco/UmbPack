@@ -91,29 +91,33 @@ namespace Umbraco.Packager.CI.Verbs
             }
 
             Console.WriteLine(Resources.Pack_LoadingFile, packageFile);
-            Console.WriteLine("----------------------------------------");
 
             // load the package xml
             var packageXml = XElement.Load(packageFile);
 
+            Console.WriteLine(Resources.Pack_UpdatingVersion);
+
             // stamp the package version.
             var version = GetOrSetPackageVersion(packageXml, options.Version);
 
+            Console.WriteLine(Resources.Pack_GetPackageName);
             // work out what we are going to call the package
             var packageFileName = GetPackageFileName(options.OutputDirectory, packageXml, version);
 
+            Console.WriteLine(Resources.Pack_AddPackageFiles);
             // add any files based on what is already in the package.xml
             AddFilesBasedOnPackageXml(packageXml, workingDir);
 
             // if the source is a folder, grab all the files from that folder
             if (isFolder) AddFilesFromFolders(options.FolderOrFile, workingDir);
 
+            Console.WriteLine(Resources.Pack_BuildPackage);
             BuildPackageFolder(packageXml, workingDir, buildFolder);
             Directory.Delete(workingDir, true);
 
-            Console.WriteLine("----------------------------------------");
-
             CreateZip(buildFolder, packageFileName);
+
+            Console.WriteLine(Resources.Pack_Complete);   
             Directory.Delete(buildFolder, true);
 
             return 0;
@@ -233,8 +237,9 @@ namespace Umbraco.Packager.CI.Verbs
 
             if (string.IsNullOrWhiteSpace(orgPath)) orgPath = "";
 
-            orgPath = orgPath.TrimStart('\\').Replace("/", "\\");
-            path = path.Replace("/", "\\");
+            // remove leading and trialing slashes from anything we have.
+            orgPath = orgPath.Replace("/", "\\").Trim('\\');
+            path = path.Replace("/", "\\").Trim('\\');
 
             return (path, orgPath);
         }

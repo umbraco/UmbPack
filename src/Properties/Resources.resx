@@ -182,28 +182,43 @@ see ??? for definitive documentation of those fields and excatly what they do</v
     <value>Website</value>
   </data>
   <data name="Pack.AddingFolder" xml:space="preserve">
-    <value>Adding Folder: {0}</value>
+    <value>    - Adding Folder: {0}</value>
   </data>
   <data name="Pack.AddingSingle" xml:space="preserve">
-    <value>Adding: {0} to {1}</value>
+    <value>    - Adding: {0} to {1}</value>
+  </data>
+  <data name="Pack.AddPackageFiles" xml:space="preserve">
+    <value> - Adding files to package</value>
   </data>
   <data name="Pack.BuildingFile" xml:space="preserve">
-    <value>Building package from package.xml file contents</value>
+    <value>Building package from package from package.xml</value>
   </data>
   <data name="Pack.BuildingFolder" xml:space="preserve">
     <value>Building package from folder: {0}</value>
   </data>
+  <data name="Pack.BuildPackage" xml:space="preserve">
+    <value> - Building package</value>
+  </data>
+  <data name="Pack.Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
   <data name="Pack.DirectoryMissing" xml:space="preserve">
     <value>Build Directory {0} doesn't exist</value>
   </data>
+  <data name="Pack.GetPackageName" xml:space="preserve">
+    <value> - Getting Package Name</value>
+  </data>
   <data name="Pack.LoadingFile" xml:space="preserve">
-    <value>Loading Package File: {0}</value>
+    <value> - Loading Package File: {0}</value>
   </data>
   <data name="Pack.MissingXml" xml:space="preserve">
     <value>Unable to locate the package.xml file {0}</value>
   </data>
   <data name="Pack.SavingPackage" xml:space="preserve">
-    <value>Saving Package to {0}</value>
+    <value> - Saving Package to {0}</value>
+  </data>
+  <data name="Pack.UpdatingVersion" xml:space="preserve">
+    <value> - Updating package version</value>
   </data>
   <data name="Push.ApiKeyInvalid" xml:space="preserve">
     <value>Api Key is invalid</value>
