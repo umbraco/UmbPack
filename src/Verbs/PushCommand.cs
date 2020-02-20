@@ -28,7 +28,7 @@ namespace Umbraco.Packager.CI.Verbs
         [Option('k', "Key", HelpText = "HelpPushKey", ResourceType = typeof(HelpTextResource))]
         public string ApiKey { get; set; }
 
-        [Option('p', "Publish", Default = "true", 
+        [Option('c', "Current", Default = "true", 
             HelpText = "HelpPushPublish", ResourceType = typeof(HelpTextResource))]
         public string Publish { get; set; }
 
