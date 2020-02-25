@@ -118,9 +118,9 @@ namespace Umbraco.Packager.CI.Verbs
             package.Add(new XElement("url", options.Url));
             package.Add(new XElement("requirements",
                 new XAttribute("type", "strict"),
-                new XElement("major", 8),
-                new XElement("major", 0),
-                new XElement("major", 0)));
+                new XElement("major", options.UmbracoVersion.Major),
+                new XElement("major", options.UmbracoVersion.Minor),
+                new XElement("major", options.UmbracoVersion.Patch)));
             info.Add(package);
 
             info.Add(new XElement("author",
