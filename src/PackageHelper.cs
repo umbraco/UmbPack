@@ -83,7 +83,7 @@ namespace Umbraco.Packager.CI
             }
             catch (HttpRequestException ex)
             {
-                throw;
+                throw ex;
             }
 
             return null;
