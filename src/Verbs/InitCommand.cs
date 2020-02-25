@@ -168,7 +168,7 @@ namespace Umbraco.Packager.CI.Verbs
         /// </summary>
         /// <param name="prompt">text to put in prompt</param>
         /// <param name="defaultValue">default value if user just presses enter</param>
-        /// <returns>SemVersion compatable version</returns>
+        /// <returns>SemVersion compatible version</returns>
         private static SemVersion GetVersionString(string prompt, string defaultValue)
         {
             while (true)
