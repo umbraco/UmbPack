@@ -227,7 +227,7 @@ see ??? for definitive documentation of those fields and exactly what they do</v
     <value>The package '{0}' was successfully uploaded to our.umbraco.com</value>
   </data>
   <data name="Push.Extracting" xml:space="preserve">
-    <value>Extracting info form package.xml file</value>
+    <value>Extracting info from package.xml file</value>
   </data>
   <data name="Push.FileNotZip" xml:space="preserve">
     <value>Umbraco package file '{0}' must be a .zip</value>
