@@ -123,7 +123,11 @@ namespace Umbraco.Packager.CI
         {
             var client = new HttpClient();
 
+#if DEBUG
             client.BaseAddress = new Uri("http://localhost:24292");
+#else
+            client.BaseAddress = new Uri("https://our.umbraco.com");
+#endif
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             return client;
