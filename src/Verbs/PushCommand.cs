@@ -144,7 +144,7 @@ namespace Umbraco.Packager.CI.Verbs
 
 
         /// <summary>
-        ///  returns the version compatability string for uploading the package
+        ///  returns the version compatibility string for uploading the package
         /// </summary>
         /// <param name="worksWithString"></param>
         /// <returns></returns>
