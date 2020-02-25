@@ -125,7 +125,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             info.Add(new XElement("author",
                         new XElement("name", options.Author),
-                        new XElement("webiste", options.Website)));
+                        new XElement("website", options.Website)));
 
             info.Add(new XElement("readme",
                 new XCData(options.Description)));
