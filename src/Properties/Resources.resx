@@ -191,7 +191,7 @@ see ??? for definitive documentation of those fields and exactly what they do</v
     <value> - Adding files to package</value>
   </data>
   <data name="Pack.BuildingFile" xml:space="preserve">
-    <value>Building package from package from package.xml</value>
+    <value>Building package from package.xml</value>
   </data>
   <data name="Pack.BuildingFolder" xml:space="preserve">
     <value>Building package from folder: {0}</value>
