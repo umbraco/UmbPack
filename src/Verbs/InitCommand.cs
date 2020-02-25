@@ -100,7 +100,7 @@ namespace Umbraco.Packager.CI.Verbs
         /// <summary>
         ///  Make a package xml from the options
         /// </summary>
-        /// <param name="options">options enterd by the user</param>
+        /// <param name="options">options entered by the user</param>
         /// <returns>XElement containing the package.xml info</returns>
         private static XElement MakePackageFile(PackageSetup options)
         {
