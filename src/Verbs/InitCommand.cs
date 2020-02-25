@@ -241,7 +241,7 @@ namespace Umbraco.Packager.CI.Verbs
         ///  Package Setup options
         /// </summary>
         /// <remarks>
-        ///  Options that are used in building the package.xml file. 
+        ///  Options that are used in building the package.xml file
         /// </remarks>
         private class PackageSetup
         {
