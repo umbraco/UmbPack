@@ -35,7 +35,7 @@ namespace Umbraco.Packager.CI.Verbs
     /// </summary>
     /// <remarks>
     ///    you can mark up the package.xml file with a couple of extra things
-    ///    and when its processed by this command, to make the full verison
+    ///    and when its processed by this command, to make the full version
     ///    
     /// Example: 
     /// <![CDATA[
