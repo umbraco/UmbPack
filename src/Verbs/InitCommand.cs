@@ -212,7 +212,6 @@ namespace Umbraco.Packager.CI.Verbs
         /// <param name="packageFile">path to a package file</param>
         private static string GetPackageFile(string packageFile)
         {
-            var currentFolder = Path.GetDirectoryName(AppContext.BaseDirectory);
             var filePath = Path.Combine(".", "package.xml");
 
             if (!string.IsNullOrWhiteSpace(packageFile))

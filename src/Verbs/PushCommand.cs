@@ -128,7 +128,9 @@ namespace Umbraco.Packager.CI.Verbs
                     else if (httpResponse.IsSuccessStatusCode)
                     {
                         Console.WriteLine(Resources.Push_Complete);
-                        var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                        
+                        // Response is not reported (at the moment)
+                        // var apiReponse = await httpResponse.Content.ReadAsStringAsync();
                         // Console.WriteLine(apiReponse);
                     }
                 }
