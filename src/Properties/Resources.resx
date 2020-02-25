@@ -152,7 +152,7 @@ Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
     <value>This utility will walk you through creating a package.xml file.
 It only covers the most common items, and tries to guess sensible defaults
 
-see ??? for definitive documentation of those fields and excatly what they do</value>
+see ??? for definitive documentation of those fields and exactly what they do</value>
   </data>
   <data name="Init.InvalidVersion" xml:space="preserve">
     <value>Invalid Version: '{0}'</value>
