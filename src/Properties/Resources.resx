@@ -167,7 +167,7 @@ see ??? for definitive documentation of those fields and exactly what they do</v
     <value>Package Name</value>
   </data>
   <data name="Init.Prompt" xml:space="preserve">
-    <value>It this OK?</value>
+    <value>Is this OK?</value>
   </data>
   <data name="Init.UmbracoVersion" xml:space="preserve">
     <value>Umbraco Version</value>
