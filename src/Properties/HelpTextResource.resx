@@ -154,6 +154,6 @@
     <value>Make this package the current package file</value>
   </data>
   <data name="HelpPushWorks" xml:space="preserve">
-    <value>Compatable umbraco versions (in the form v850,v840,v830)</value>
+    <value>Compatible Umbraco versions (in the form v850,v840,v830)</value>
   </data>
 </root>
