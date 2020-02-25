@@ -74,7 +74,7 @@ namespace Umbraco.Packager.CI.Verbs
             }
 
             // Parse package.xml before upload to print out info
-            // and to use for comparisson on what is already uploaded
+            // and to use for comparison on what is already uploaded
             var packageInfo = Parse.PackageXml(filePath);
 
             // OK all checks passed - time to upload it
