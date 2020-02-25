@@ -76,7 +76,7 @@ namespace Umbraco.Packager.CI
                     {
                         // Get the JSON string content which gives us a list
                         // of current Umbraco Package .zips for this project
-                        var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                        var apiResponse = await httpResponse.Content.ReadAsStringAsync();
                         return JsonConvert.DeserializeObject<JArray>(apiReponse);
                     }
                 }
