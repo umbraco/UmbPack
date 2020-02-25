@@ -33,7 +33,7 @@ namespace Umbraco.Packager.CI.Verbs
 
 
     /// <summary>
-    ///  Init command, askes the user some questions makes a package.xml file
+    ///  Init command, asks the user some questions makes a package.xml file
     /// </summary>
     /// <remarks>
     ///  Works like npm init, makes some guesses as to what defaults to use
