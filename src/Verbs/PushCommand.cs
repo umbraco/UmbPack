@@ -170,10 +170,15 @@ namespace Umbraco.Packager.CI.Verbs
             return false.ToString();
         }
 
+        /// <summary>
+        ///  taken from the source of our.umbraco.com
+        /// </summary>
         private class UmbracoVersion
         {
             public string Version { get; set; }
-            public string Name { get; set; }
+
+            // We don't need to supply name. but it is in the orginal model.
+            // public string Name { get; set; }
         }
     }
 }
