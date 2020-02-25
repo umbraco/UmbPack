@@ -117,7 +117,7 @@ namespace Umbraco.Packager.CI.Verbs
                     form.Add(new StringContent(ParsePublishFlag(options.Publish)), "isCurrent");
                     form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
                     form.Add(new StringContent("package"), "fileType");
-                    form.Add(GetVersionCompatability(options.WorksWith), "umbracoVersions");
+                    form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
 
                     var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
