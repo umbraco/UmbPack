@@ -124,7 +124,7 @@
     <value>Folder to save package.xml in (default current folder)</value>
   </data>
   <data name="HelpInitNuspec" xml:space="preserve">
-    <value>use nuspec file as a starting point for the package.xml file</value>
+    <value>Use nuspec file as a starting point for the package.xml file</value>
   </data>
   <data name="HelpPack" xml:space="preserve">
     <value>Create an Umbraco package from a folder or existing package.xml file</value>
