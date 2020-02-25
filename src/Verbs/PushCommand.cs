@@ -148,7 +148,7 @@ namespace Umbraco.Packager.CI.Verbs
         /// </summary>
         /// <param name="worksWithString"></param>
         /// <returns></returns>
-        private static StringContent GetVersionCompatability(string worksWithString)
+        private static StringContent GetVersionCompatibility(string worksWithString)
         {
             // TODO: Workout how we can get a latest version from our ? 
             // TODO: Maybe accept wild cards (8.* -> 8.5.0,8.4.0,8.3.0)
