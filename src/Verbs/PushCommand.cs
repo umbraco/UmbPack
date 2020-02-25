@@ -93,7 +93,7 @@ namespace Umbraco.Packager.CI.Verbs
                 // HttpClient will use this event handler to give us
                 // Reporting on how its progress the file upload
                 var processMsgHandler = new ProgressMessageHandler(new HttpClientHandler());
-                processMsgHander.HttpSendProgress += (sender, e) =>
+                processMsgHandler.HttpSendProgress += (sender, e) =>
                 {
                     // Could try to reimplement progressbar - but that library did not work in GH Actions :(
                     var percent = e.ProgressPercentage;
