@@ -224,7 +224,7 @@ see ??? for definitive documentation of those fields and exactly what they do</v
     <value>Api Key is invalid</value>
   </data>
   <data name="Push.Complete" xml:space="preserve">
-    <value>The package '{0}' was sucessfully uploaded to our.umbraco.com</value>
+    <value>The package '{0}' was successfully uploaded to our.umbraco.com</value>
   </data>
   <data name="Push.Extracting" xml:space="preserve">
     <value>Extracting info form package.xml file</value>
