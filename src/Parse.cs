@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using System.Linq;
 using System.Xml;
+using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI
 {
@@ -28,8 +29,8 @@ namespace Umbraco.Packager.CI
                     if(packageInfo == null)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Error.WriteLine($"Invalid package.xml");
-                        Console.Error.WriteLine($"Unable to find //umbPackage/info/package in XML");
+                        Console.Error.WriteLine(Resources.Push_InvalidXml);
+                        Console.Error.WriteLine(Resources.Push_MissingPackageNode);
                         Console.ResetColor();
 
                         // ERROR_INVALID_FUNCTION
@@ -46,11 +47,10 @@ namespace Umbraco.Packager.CI
                 }
             }
 
-            Console.WriteLine("Parsing package.xml");
+            Console.WriteLine(Resources.Push_Extracting);
             Console.WriteLine($"Name: {packageDetails.Name}");
-            Console.WriteLine($"Version: {packageDetails.VersionString}");
-            Console.WriteLine(Environment.NewLine);
-
+            Console.WriteLine($"Version: {packageDetails.VersionString}\n");
+            
             return packageDetails;
         }
     }
