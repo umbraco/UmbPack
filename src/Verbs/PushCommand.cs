@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CommandLine;
 
 using Newtonsoft.Json;
-
+using Umbraco.Packager.CI.Auth;
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
@@ -27,6 +27,12 @@ namespace Umbraco.Packager.CI.Verbs
 
         [Option('k', "Key", HelpText = "HelpPushKey", ResourceType = typeof(HelpTextResource))]
         public string ApiKey { get; set; }
+        
+        [Option('m', "MemberId", HelpText = "HelpPushMemberId", ResourceType = typeof(HelpTextResource))]
+        public int MemberId { get; set; }
+        
+        [Option('p', "ProjectId", HelpText = "HelpPushProjectId", ResourceType = typeof(HelpTextResource))]
+        public int ProjectId { get; set; }
 
         [Option('c', "Current", Default = "true", 
             HelpText = "HelpPushPublish", ResourceType = typeof(HelpTextResource))]
@@ -50,8 +56,9 @@ namespace Umbraco.Packager.CI.Verbs
             // --package=./MyFile.zip
             // --package=../MyParentFolder.zip
             var filePath = options.Package;
-
             var apiKey = options.ApiKey;
+            var memberId = options.MemberId;
+            var projectId = options.ProjectId;
 
             var packageHelper = new PackageHelper();
 
@@ -66,7 +73,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             // gets a package list from our.umbraco
             // if the api key is invalid we will also find out here.
-            var packages = await packageHelper.GetPackageList(apiKey);
+            var packages = await packageHelper.GetPackageList(apiKey, memberId, projectId);
 
             if (packages != null)
             { 
@@ -103,7 +110,9 @@ namespace Umbraco.Packager.CI.Verbs
 
                 Console.Write(Resources.Push_Uploading, Path.GetFileName(options.Package));
 
-                using (var client = packageHelper.GetClientBase(options.ApiKey))
+                var url = "/Umbraco/Api/ProjectUpload/UpdatePackage";
+
+                using (var client = packageHelper.GetClientBase(url, options.ApiKey, options.MemberId, options.ProjectId))
                 {
                     MultipartFormDataContent form = new MultipartFormDataContent();
                     var fileInfo = new FileInfo(options.Package);
@@ -119,7 +128,7 @@ namespace Umbraco.Packager.CI.Verbs
                     form.Add(new StringContent("package"), "fileType");
                     form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
 
-                    var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
+                    var httpResponse = await client.PostAsync(url, form);
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         packageHelper.WriteError(Resources.Push_ApiKeyInvalid);

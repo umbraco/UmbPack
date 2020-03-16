@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -135,9 +135,9 @@ namespace Umbraco.Packager.CI.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
-        ///It only covers the most common items, and trys to guess sensible defaults
+        ///It only covers the most common items, and tries to guess sensible defaults
         ///
-        ///see ??? for definitive documentation of those fields and excatly what they do.
+        ///see ??? for definitive documentation of those fields and exactly what they do.
         /// </summary>
         internal static string Init_Header {
             get {
@@ -182,7 +182,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It this OK?.
+        ///   Looks up a localized string similar to Is this OK?.
         /// </summary>
         internal static string Init_Prompt {
             get {
@@ -227,6 +227,15 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified memberId is not a valid number.
+        /// </summary>
+        internal static string MemberIdNotInt {
+            get {
+                return ResourceManager.GetString("MemberIdNotInt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to     - Adding Folder: {0}.
         /// </summary>
         internal static string Pack_AddingFolder {
@@ -254,7 +263,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Building package from package from package.xml.
+        ///   Looks up a localized string similar to Building package from package.xml.
         /// </summary>
         internal static string Pack_BuildingFile {
             get {
@@ -344,6 +353,15 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified memberId is not a valid number.
+        /// </summary>
+        internal static string ProjectIdNotInt {
+            get {
+                return ResourceManager.GetString("ProjectIdNotInt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Api Key is invalid.
         /// </summary>
         internal static string Push_ApiKeyInvalid {
@@ -353,7 +371,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The package &apos;{0}&apos; was sucessfully uploaded to our.umbraco.com.
+        ///   Looks up a localized string similar to The package &apos;{0}&apos; was successfully uploaded to our.umbraco.com.
         /// </summary>
         internal static string Push_Complete {
             get {
@@ -362,7 +380,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extracting info form package.xml file.
+        ///   Looks up a localized string similar to Extracting info from package.xml file.
         /// </summary>
         internal static string Push_Extracting {
             get {
