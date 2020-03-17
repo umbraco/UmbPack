@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class HelpTextResource {
@@ -79,7 +79,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to use nuspec file as a starting point for the package.xml file.
+        ///   Looks up a localized string similar to Use nuspec file as a starting point for the package.xml file.
         /// </summary>
         public static string HelpInitNuspec {
             get {
@@ -151,11 +151,29 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Member Id from Our .
+        /// </summary>
+        public static string HelpPushMemberId {
+            get {
+                return ResourceManager.GetString("HelpPushMemberId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Path to the package.zip you wish to push.
         /// </summary>
         public static string HelpPushPackage {
             get {
                 return ResourceManager.GetString("HelpPushPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectId from Our .
+        /// </summary>
+        public static string HelpPushProjectId {
+            get {
+                return ResourceManager.GetString("HelpPushProjectId", resourceCulture);
             }
         }
         
@@ -169,7 +187,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compatable umbraco versions (in the form v850,v840,v830).
+        ///   Looks up a localized string similar to Compatible Umbraco versions (in the form v850,v840,v830).
         /// </summary>
         public static string HelpPushWorks {
             get {

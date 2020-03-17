@@ -62,7 +62,7 @@ namespace Umbraco.Packager.CI
         /// </summary>
         public async Task<JArray> GetPackageList(string apiKey, int memberId, int projectId)
         {
-            var url = "/Umbraco/Api/ProjectUpload/GetProjectFiles";
+            var url = "Umbraco/Api/ProjectUpload/GetProjectFiles";
             try
             {
                 using (var httpClient = GetClientBase(url, apiKey, memberId, projectId))
@@ -137,9 +137,10 @@ namespace Umbraco.Packager.CI
         
         public HttpClient GetClientBase(string url, string apiKey, int memberId, int projectId)
         {
-            var client = new HttpClient {BaseAddress = new Uri(AuthConstants.BaseUrl)};
-
-            var requestPath = new Uri(AuthConstants.BaseUrl + url).CleanPathAndQuery();
+            var baseUrl = AuthConstants.BaseUrl;
+            var client = new HttpClient {BaseAddress = new Uri(baseUrl)};
+            
+            var requestPath = new Uri(client.BaseAddress + url).CleanPathAndQuery();
             var timestamp = DateTime.UtcNow;
             var nonce = Guid.NewGuid();
 
@@ -147,7 +148,7 @@ namespace Umbraco.Packager.CI
             var headerToken = HMACAuthentication.GenerateAuthorizationHeader(signature, nonce, timestamp);
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", headerToken);
-            client.DefaultRequestHeaders.Add(AuthConstants.MemberIdClaim, memberId.ToInvariantString());
+            client.DefaultRequestHeaders.Add(AuthConstants.MemberIdHeader, memberId.ToInvariantString());
             client.DefaultRequestHeaders.Add(AuthConstants.ProjectIdHeader, projectId.ToInvariantString());
 
             return client;

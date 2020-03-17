@@ -147,6 +147,12 @@
   <data name="HelpPushKey" xml:space="preserve">
     <value>Api Key to use </value>
   </data>
+  <data name="HelpPushMemberId" xml:space="preserve">
+    <value>Member Id from Our </value>
+  </data>
+  <data name="HelpPushProjectId" xml:space="preserve">
+    <value>ProjectId from Our </value>
+  </data>
   <data name="HelpPushPackage" xml:space="preserve">
     <value>Path to the package.zip you wish to push</value>
   </data>
