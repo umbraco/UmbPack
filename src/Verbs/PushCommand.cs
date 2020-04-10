@@ -27,12 +27,6 @@ namespace Umbraco.Packager.CI.Verbs
 
         [Option('k', "Key", HelpText = "HelpPushKey", ResourceType = typeof(HelpTextResource))]
         public string ApiKey { get; set; }
-        
-        [Option('m', "MemberId", HelpText = "HelpPushMemberId", ResourceType = typeof(HelpTextResource))]
-        public int MemberId { get; set; }
-        
-        [Option('p', "ProjectId", HelpText = "HelpPushProjectId", ResourceType = typeof(HelpTextResource))]
-        public int ProjectId { get; set; }
 
         [Option('c', "Current", Default = "true", 
             HelpText = "HelpPushPublish", ResourceType = typeof(HelpTextResource))]
@@ -57,10 +51,10 @@ namespace Umbraco.Packager.CI.Verbs
             // --package=../MyParentFolder.zip
             var filePath = options.Package;
             var apiKey = options.ApiKey;
-            var memberId = options.MemberId;
-            var projectId = options.ProjectId;
 
             var packageHelper = new PackageHelper();
+
+            var keyParts = packageHelper.SplitKey(apiKey);
 
             // Check we can find the file
             packageHelper.EnsurePackageExists(filePath);
@@ -73,7 +67,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             // gets a package list from our.umbraco
             // if the api key is invalid we will also find out here.
-            var packages = await packageHelper.GetPackageList(apiKey, memberId, projectId);
+            var packages = await packageHelper.GetPackageList(keyParts);
 
             if (packages != null)
             { 
@@ -108,11 +102,13 @@ namespace Umbraco.Packager.CI.Verbs
 
                 var packageHelper = new PackageHelper();
 
+                var keyParts = packageHelper.SplitKey(options.ApiKey);
+
                 Console.Write(Resources.Push_Uploading, Path.GetFileName(options.Package));
 
                 var url = "/Umbraco/Api/ProjectUpload/UpdatePackage";
 
-                using (var client = packageHelper.GetClientBase(url, options.ApiKey, options.MemberId, options.ProjectId))
+                using (var client = packageHelper.GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
                 {
                     MultipartFormDataContent form = new MultipartFormDataContent();
                     var fileInfo = new FileInfo(options.Package);

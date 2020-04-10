@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -60,12 +61,12 @@ namespace Umbraco.Packager.CI
         /// <summary>
         ///  returns an array of existing package files.
         /// </summary>
-        public async Task<JArray> GetPackageList(string apiKey, int memberId, int projectId)
+        public async Task<JArray> GetPackageList(ApiKeyModel keyParts)
         {
             var url = "Umbraco/Api/ProjectUpload/GetProjectFiles";
             try
             {
-                using (var httpClient = GetClientBase(url, apiKey, memberId, projectId))
+                using (var httpClient = GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
                 {
                     var httpResponse = await httpClient.GetAsync(url);
                     
@@ -118,6 +119,26 @@ namespace Umbraco.Packager.CI
             Console.ResetColor();
         }
 
+        public ApiKeyModel SplitKey(string apiKey)
+        {
+            var keyParts = apiKey.Split('-');
+            var keyModel = new ApiKeyModel();
+
+            if (int.TryParse(keyParts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int projectId))
+            {
+                keyModel.ProjectId = projectId;
+            }
+            
+            if (int.TryParse(keyParts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int memberId))
+            {
+                keyModel.MemberId = memberId;
+            }
+
+            keyModel.Token = keyParts[2];
+
+            return keyModel;
+        }
+
         /// <summary>
         ///  basic http client with Bearer token setup.
         /// </summary>
@@ -139,5 +160,12 @@ namespace Umbraco.Packager.CI
 
             return client;
         }
+    }
+
+    public class ApiKeyModel
+    {
+        public string Token { get; set; }
+        public int ProjectId { get; set; }
+        public int MemberId { get; set; }
     }
 }
