@@ -17,6 +17,13 @@ namespace Umbraco.Packager.CI
 {
     public class PackageHelper
     {
+        private readonly IHttpClientFactory httpClientFactory;
+
+        public PackageHelper(IHttpClientFactory httpClientFactory)
+        {
+            this.httpClientFactory = httpClientFactory;
+        }
+
         /// <summary>
         ///  verify that the package file exists at the specified location
         /// </summary>
@@ -144,8 +151,10 @@ namespace Umbraco.Packager.CI
         /// </summary>
         public HttpClient GetClientBase(string url, string apiKey, int memberId, int projectId)
         {
+
             var baseUrl = AuthConstants.BaseUrl;
-            var client = new HttpClient {BaseAddress = new Uri(baseUrl)};
+            var client = httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(baseUrl);
             
             var requestPath = new Uri(client.BaseAddress + url).CleanPathAndQuery();
             var timestamp = DateTime.UtcNow;
@@ -157,6 +166,9 @@ namespace Umbraco.Packager.CI
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", headerToken);
             client.DefaultRequestHeaders.Add(AuthConstants.MemberIdHeader, memberId.ToInvariantString());
             client.DefaultRequestHeaders.Add(AuthConstants.ProjectIdHeader, projectId.ToInvariantString());
+
+            
+
 
             return client;
         }

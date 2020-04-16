@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 using CommandLine;
 using CommandLine.Text;
-
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Umbraco.Packager.CI.Properties;
 using Umbraco.Packager.CI.Verbs;
 
@@ -16,6 +17,24 @@ namespace Umbraco.Packager.CI
     public class Program
     {
         public static async Task Main(string[] args)
+        {
+            var builder = new HostBuilder()
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHttpClient();
+                services.AddTransient<PackageHelper>();
+            }).UseConsoleLifetime();
+
+            var host = builder.Build();
+
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var services = serviceScope.ServiceProvider;
+                await InternalMain(args, services.GetRequiredService<PackageHelper>());
+                   
+            }
+        }
+        internal static async Task InternalMain(string[] args, PackageHelper packageHelper)
         {
 
             // now uses 'verbs' so each verb is a command
@@ -37,7 +56,7 @@ namespace Umbraco.Packager.CI
 
             parserResults
                 .WithParsed<PackOptions>(opts => PackCommand.RunAndReturn(opts).Wait())
-                .WithParsed<PushOptions>(opts => PushCommand.RunAndReturn(opts).Wait())
+                .WithParsed<PushOptions>(opts => PushCommand.RunAndReturn(opts, packageHelper).Wait())
                 .WithParsed<InitOptions>(opts => InitCommand.RunAndReturn(opts))
                 .WithNotParsed(async errs => await DisplayHelp(parserResults, errs));
         }
