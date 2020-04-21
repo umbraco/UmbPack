@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CommandLine;
 
 using Newtonsoft.Json;
-
+using Umbraco.Packager.CI.Auth;
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
@@ -44,16 +44,15 @@ namespace Umbraco.Packager.CI.Verbs
 
     internal static class PushCommand
     {
-        public static async Task<int> RunAndReturn(PushOptions options)
+        public static async Task<int> RunAndReturn(PushOptions options, PackageHelper packageHelper)
         {
             // --package=MyFile.zip
             // --package=./MyFile.zip
             // --package=../MyParentFolder.zip
             var filePath = options.Package;
-
             var apiKey = options.ApiKey;
 
-            var packageHelper = new PackageHelper();
+            var keyParts = packageHelper.SplitKey(apiKey);
 
             // Check we can find the file
             packageHelper.EnsurePackageExists(filePath);
@@ -66,7 +65,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             // gets a package list from our.umbraco
             // if the api key is invalid we will also find out here.
-            var packages = await packageHelper.GetPackageList(apiKey);
+            var packages = await packageHelper.GetPackageList(keyParts);
 
             if (packages != null)
             { 
@@ -78,7 +77,7 @@ namespace Umbraco.Packager.CI.Verbs
             var packageInfo = Parse.PackageXml(filePath);
 
             // OK all checks passed - time to upload it
-            await UploadPackage(options);
+            await UploadPackage(options, packageHelper);
 
             // Got this far then it got uploaded to our.umb all OK
             Console.WriteLine(Resources.Push_Complete, filePath);
@@ -86,7 +85,7 @@ namespace Umbraco.Packager.CI.Verbs
             return 0;
         }
 
-        private static async Task UploadPackage(PushOptions options)
+        private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper)
         {
             try
             {
@@ -99,11 +98,13 @@ namespace Umbraco.Packager.CI.Verbs
                     var percent = e.ProgressPercentage;
                 };
 
-                var packageHelper = new PackageHelper();
+                var keyParts = packageHelper.SplitKey(options.ApiKey);
 
                 Console.Write(Resources.Push_Uploading, Path.GetFileName(options.Package));
 
-                using (var client = packageHelper.GetClientBase(options.ApiKey))
+                var url = "/Umbraco/Api/ProjectUpload/UpdatePackage";
+
+                using (var client = packageHelper.GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
                 {
                     MultipartFormDataContent form = new MultipartFormDataContent();
                     var fileInfo = new FileInfo(options.Package);
@@ -119,7 +120,7 @@ namespace Umbraco.Packager.CI.Verbs
                     form.Add(new StringContent("package"), "fileType");
                     form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
 
-                    var httpResponse = await client.PostAsync("/Umbraco/Api/ProjectUpload/UpdatePackage", form);
+                    var httpResponse = await client.PostAsync(url, form);
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         packageHelper.WriteError(Resources.Push_ApiKeyInvalid);

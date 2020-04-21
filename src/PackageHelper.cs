@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,12 +9,21 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Umbraco.Packager.CI.Auth;
+using Umbraco.Packager.CI.Extensions;
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI
 {
     public class PackageHelper
     {
+        private readonly IHttpClientFactory httpClientFactory;
+
+        public PackageHelper(IHttpClientFactory httpClientFactory)
+        {
+            this.httpClientFactory = httpClientFactory;
+        }
+
         /// <summary>
         ///  verify that the package file exists at the specified location
         /// </summary>
@@ -58,14 +68,14 @@ namespace Umbraco.Packager.CI
         /// <summary>
         ///  returns an array of existing package files.
         /// </summary>
-        public async Task<JArray> GetPackageList(string apiKey)
+        public async Task<JArray> GetPackageList(ApiKeyModel keyParts)
         {
+            var url = "Umbraco/Api/ProjectUpload/GetProjectFiles";
             try
             {
-                using (var httpClient = GetClientBase(apiKey))
+                using (var httpClient = GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
                 {
-                    // The JWT token contains a project ID/key - hence no querystring ?id=3256
-                    var httpResponse = await httpClient.GetAsync("/Umbraco/Api/ProjectUpload/GetProjectFiles");
+                    var httpResponse = await httpClient.GetAsync(url);
                     
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -116,21 +126,58 @@ namespace Umbraco.Packager.CI
             Console.ResetColor();
         }
 
+        public ApiKeyModel SplitKey(string apiKey)
+        {
+            var keyParts = apiKey.Split('-');
+            var keyModel = new ApiKeyModel();
+
+            if (int.TryParse(keyParts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int projectId))
+            {
+                keyModel.ProjectId = projectId;
+            }
+            
+            if (int.TryParse(keyParts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int memberId))
+            {
+                keyModel.MemberId = memberId;
+            }
+
+            keyModel.Token = keyParts[2];
+
+            return keyModel;
+        }
+
         /// <summary>
         ///  basic http client with Bearer token setup.
         /// </summary>
-        public HttpClient GetClientBase(string apiKey)
+        public HttpClient GetClientBase(string url, string apiKey, int memberId, int projectId)
         {
-            var client = new HttpClient();
 
-#if DEBUG
-            client.BaseAddress = new Uri("http://localhost:24292");
-#else
-            client.BaseAddress = new Uri("https://our.umbraco.com");
-#endif
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var baseUrl = AuthConstants.BaseUrl;
+            var client = httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(baseUrl);
+            
+            var requestPath = new Uri(client.BaseAddress + url).CleanPathAndQuery();
+            var timestamp = DateTime.UtcNow;
+            var nonce = Guid.NewGuid();
+
+            var signature = HMACAuthentication.GetSignature(requestPath, timestamp, nonce, apiKey);
+            var headerToken = HMACAuthentication.GenerateAuthorizationHeader(signature, nonce, timestamp);
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", headerToken);
+            client.DefaultRequestHeaders.Add(AuthConstants.MemberIdHeader, memberId.ToInvariantString());
+            client.DefaultRequestHeaders.Add(AuthConstants.ProjectIdHeader, projectId.ToInvariantString());
+
+            
+
+
             return client;
         }
+    }
+
+    public class ApiKeyModel
+    {
+        public string Token { get; set; }
+        public int ProjectId { get; set; }
+        public int MemberId { get; set; }
     }
 }
