@@ -44,15 +44,13 @@ namespace Umbraco.Packager.CI.Verbs
 
     internal static class PushCommand
     {
-        public static async Task<int> RunAndReturn(PushOptions options)
+        public static async Task<int> RunAndReturn(PushOptions options, PackageHelper packageHelper)
         {
             // --package=MyFile.zip
             // --package=./MyFile.zip
             // --package=../MyParentFolder.zip
             var filePath = options.Package;
             var apiKey = options.ApiKey;
-
-            var packageHelper = new PackageHelper();
 
             var keyParts = packageHelper.SplitKey(apiKey);
 
@@ -79,7 +77,7 @@ namespace Umbraco.Packager.CI.Verbs
             var packageInfo = Parse.PackageXml(filePath);
 
             // OK all checks passed - time to upload it
-            await UploadPackage(options);
+            await UploadPackage(options, packageHelper);
 
             // Got this far then it got uploaded to our.umb all OK
             Console.WriteLine(Resources.Push_Complete, filePath);
@@ -87,7 +85,7 @@ namespace Umbraco.Packager.CI.Verbs
             return 0;
         }
 
-        private static async Task UploadPackage(PushOptions options)
+        private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper)
         {
             try
             {
@@ -99,8 +97,6 @@ namespace Umbraco.Packager.CI.Verbs
                     // Could try to reimplement progressbar - but that library did not work in GH Actions :(
                     var percent = e.ProgressPercentage;
                 };
-
-                var packageHelper = new PackageHelper();
 
                 var keyParts = packageHelper.SplitKey(options.ApiKey);
 
