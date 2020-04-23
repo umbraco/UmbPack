@@ -126,6 +126,9 @@ namespace Umbraco.Packager.CI
             Console.ResetColor();
         }
 
+        /// <summary>
+        /// the API key has the format "packageId-memberId-apiToken", this helper method splits it in the three parts and returns a model with them all
+        /// </summary>
         public ApiKeyModel SplitKey(string apiKey)
         {
             var keyParts = apiKey.Split('-');
@@ -166,10 +169,7 @@ namespace Umbraco.Packager.CI
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", headerToken);
             client.DefaultRequestHeaders.Add(AuthConstants.MemberIdHeader, memberId.ToInvariantString());
             client.DefaultRequestHeaders.Add(AuthConstants.ProjectIdHeader, projectId.ToInvariantString());
-
             
-
-
             return client;
         }
     }
