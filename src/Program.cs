@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
@@ -66,8 +67,9 @@ namespace Umbraco.Packager.CI
             var helpText = HelpText.AutoBuild(result, h =>
             {
                 h.AutoVersion = false;
+                h.AutoHelp = false;
                 return h;
-            }, e => e);
+            }, e => e, true);
             
             // Append header with Ascii Art
             helpText.Heading = Resources.Ascaii + Environment.NewLine + helpText.Heading;
