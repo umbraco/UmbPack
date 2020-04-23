@@ -227,15 +227,6 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The specified memberId is not a valid number.
-        /// </summary>
-        internal static string MemberIdNotInt {
-            get {
-                return ResourceManager.GetString("MemberIdNotInt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to     - Adding Folder: {0}.
         /// </summary>
         internal static string Pack_AddingFolder {
@@ -349,15 +340,6 @@ namespace Umbraco.Packager.CI.Properties {
         internal static string Pack_UpdatingVersion {
             get {
                 return ResourceManager.GetString("Pack.UpdatingVersion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The specified memberId is not a valid number.
-        /// </summary>
-        internal static string ProjectIdNotInt {
-            get {
-                return ResourceManager.GetString("ProjectIdNotInt", resourceCulture);
             }
         }
         

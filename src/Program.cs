@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using CommandLine;
 using CommandLine.Text;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +33,8 @@ namespace Umbraco.Packager.CI
                    
             }
         }
-        internal static async Task InternalMain(string[] args, PackageHelper packageHelper)
+
+        private static async Task InternalMain(string[] args, PackageHelper packageHelper)
         {
 
             // now uses 'verbs' so each verb is a command
@@ -43,7 +43,7 @@ namespace Umbraco.Packager.CI
             //
             // these are handled by the Command classes.
 
-            var parser = new CommandLine.Parser(with => {
+            var parser = new Parser(with => {
                 with.HelpWriter = null;
                 // with.HelpWriter = Console.Out;
                 with.AutoVersion = false;
@@ -61,7 +61,7 @@ namespace Umbraco.Packager.CI
                 .WithNotParsed(async errs => await DisplayHelp(parserResults, errs));
         }
 
-        static async Task DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
+        private static async Task DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
         {
             var helpText = HelpText.AutoBuild(result, h =>
             {
@@ -69,7 +69,7 @@ namespace Umbraco.Packager.CI
                 return h;
             }, e => e);
             
-            // Append header with Ascaii Art
+            // Append header with Ascii Art
             helpText.Heading = Resources.Ascaii + Environment.NewLine + helpText.Heading;
             helpText.AddPostOptionsText(Resources.HelpFooter);
             Console.WriteLine(helpText);
@@ -84,7 +84,5 @@ namespace Umbraco.Packager.CI
             // ERROR_INVALID_FUNCTION
             Environment.Exit(1);
         }
-
     }
-
 }
