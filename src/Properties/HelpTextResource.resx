@@ -130,7 +130,7 @@
     <value>Create an Umbraco package from a folder or existing package.xml file</value>
   </data>
   <data name="HelpPackFile" xml:space="preserve">
-    <value>package.xml file or folder you want to create the package from</value>
+    <value>The package.xml file or folder you want to create your package from</value>
   </data>
   <data name="HelpPackOutput" xml:space="preserve">
     <value>Specified the directory the created package will be saved to</value>
@@ -146,12 +146,6 @@
   </data>
   <data name="HelpPushKey" xml:space="preserve">
     <value>Api Key to use </value>
-  </data>
-  <data name="HelpPushMemberId" xml:space="preserve">
-    <value>Member Id from Our </value>
-  </data>
-  <data name="HelpPushProjectId" xml:space="preserve">
-    <value>ProjectId from Our </value>
   </data>
   <data name="HelpPushPackage" xml:space="preserve">
     <value>Path to the package.zip you wish to push</value>

@@ -97,7 +97,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to package.xml file or folder you want to create the package from.
+        ///   Looks up a localized string similar to The package.xml file or folder you want to create your package from.
         /// </summary>
         public static string HelpPackFile {
             get {
@@ -151,29 +151,11 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Member Id from Our .
-        /// </summary>
-        public static string HelpPushMemberId {
-            get {
-                return ResourceManager.GetString("HelpPushMemberId", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Path to the package.zip you wish to push.
         /// </summary>
         public static string HelpPushPackage {
             get {
                 return ResourceManager.GetString("HelpPushPackage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ProjectId from Our .
-        /// </summary>
-        public static string HelpPushProjectId {
-            get {
-                return ResourceManager.GetString("HelpPushProjectId", resourceCulture);
             }
         }
         

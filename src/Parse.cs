@@ -60,7 +60,5 @@ namespace Umbraco.Packager.CI
         public string Name { get; set; }
 
         public string VersionString { get; set; }
-
-        public Version Version => Version.Parse(VersionString);
     }
 }

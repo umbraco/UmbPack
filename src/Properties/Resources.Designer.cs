@@ -135,9 +135,9 @@ namespace Umbraco.Packager.CI.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
-        ///It only covers the most common items, and tries to guess sensible defaults
-        ///
-        ///see ??? for definitive documentation of those fields and exactly what they do.
+        ///It only covers the most common items, and tries to guess sensible defaults.
+        ///      
+        ///See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/ for more info on what the fields mean..
         /// </summary>
         internal static string Init_Header {
             get {
@@ -223,15 +223,6 @@ namespace Umbraco.Packager.CI.Properties {
         internal static string Init_Website {
             get {
                 return ResourceManager.GetString("Init.Website", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The specified memberId is not a valid number.
-        /// </summary>
-        internal static string MemberIdNotInt {
-            get {
-                return ResourceManager.GetString("MemberIdNotInt", resourceCulture);
             }
         }
         
@@ -349,15 +340,6 @@ namespace Umbraco.Packager.CI.Properties {
         internal static string Pack_UpdatingVersion {
             get {
                 return ResourceManager.GetString("Pack.UpdatingVersion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The specified memberId is not a valid number.
-        /// </summary>
-        internal static string ProjectIdNotInt {
-            get {
-                return ResourceManager.GetString("ProjectIdNotInt", resourceCulture);
             }
         }
         
