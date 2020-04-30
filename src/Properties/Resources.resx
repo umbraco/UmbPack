@@ -150,9 +150,9 @@ Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
   </data>
   <data name="Init.Header" xml:space="preserve">
     <value>This utility will walk you through creating a package.xml file.
-It only covers the most common items, and tries to guess sensible defaults
-
-see ??? for definitive documentation of those fields and exactly what they do</value>
+It only covers the most common items, and tries to guess sensible defaults.
+      
+See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/ for more info on what the fields mean.</value>
   </data>
   <data name="Init.InvalidVersion" xml:space="preserve">
     <value>Invalid Version: '{0}'</value>

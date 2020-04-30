@@ -135,9 +135,9 @@ namespace Umbraco.Packager.CI.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
-        ///It only covers the most common items, and tries to guess sensible defaults
-        ///
-        ///see ??? for definitive documentation of those fields and exactly what they do.
+        ///It only covers the most common items, and tries to guess sensible defaults.
+        ///      
+        ///See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/ for more info on what the fields mean..
         /// </summary>
         internal static string Init_Header {
             get {
