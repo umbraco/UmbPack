@@ -1,6 +1,7 @@
 # UmbPack
 
-UmbPack is a CLI tool to use in CI/CD to upload Umbraco .zip packages to the our.umbraco.com package repository
+UmbPack is a CLI tool to use in CI/CD to upload Umbraco .zip packages to the [our.umbraco.com package repository](https://our.umbraco.com/packages/).
+
 If you are looking for info on how to use the tool, check out [the documentation]() for it instead!
 
 ## Building the tool
