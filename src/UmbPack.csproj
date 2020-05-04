@@ -16,7 +16,8 @@
     <InformationalVersion>1.0.1.0</InformationalVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Umbraco</PackageTags>
-    <Version>0.8.0</Version>     
+    <Version>0.8.0</Version>
+    <RootNamespace>Umbraco.Packager.CI</RootNamespace>     
   </PropertyGroup>
 
   <ItemGroup>

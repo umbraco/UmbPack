@@ -39,7 +39,7 @@ namespace Umbraco.Packager.CI.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Umbraco.Packager.CI.Properties.HelpTextResource", typeof(HelpTextResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UmbPack.Properties.HelpTextResource", typeof(HelpTextResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

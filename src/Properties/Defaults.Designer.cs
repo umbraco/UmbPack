@@ -39,7 +39,7 @@ namespace Umbraco.Packager.CI.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Umbraco.Packager.CI.Properties.Defaults", typeof(Defaults).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UmbPack.Properties.Defaults", typeof(Defaults).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
