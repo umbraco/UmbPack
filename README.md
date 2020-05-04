@@ -1,28 +1,26 @@
-# Umbraco-Packager-CLI
-DRAFT: A CLI tool to use in CI/CD to upload Umbraco package .zip to our.umbraco.com package repository
+# UmbPack
+
+UmbPack is a CLI tool to use in CI/CD to upload Umbraco .zip packages to the our.umbraco.com package repository
+If you are looking for info on how to use the tool, check out [the documentation]() for it instead!
 
 ## Building the tool
+
 This will create a Nuget package at `src/nupkg`
+
 ```
 cd src
-dotnet pack
+dotnet pack -c Release
 ```
 
 ## Installing the tool
-```
-dotnet tool install --global --add-source ./nupkg UmbracoPackage
-```
 
-## Using the tool
 ```
-umbracopackager --help
-umbracopackager --version
-umbracopackager --package=My_Awesome_Package.zip --key=JWTKeyHere
+dotnet tool install --global --add-source ./nupkg UmbPack
 ```
 
 ### Uninstalling the tool
+
 ```
 dotnet tool list --global
-dotnet tool uninstall --global UmbracoPackage
+dotnet tool uninstall --global UmbPack
 ```
-
