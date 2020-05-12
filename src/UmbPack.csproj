@@ -5,10 +5,10 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>UmbracoPackage</ToolCommandName>
+    <ToolCommandName>UmbPack</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
 
-    <AssemblyName>UmbracoPackage</AssemblyName>
+    <AssemblyName>UmbPack</AssemblyName>
     <AssemblyTitle>Umbraco Package CLI</AssemblyTitle>
     <Company>The Umbraco Community</Company>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -16,8 +16,8 @@
     <InformationalVersion>1.0.1.0</InformationalVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>Umbraco</PackageTags>
-    <Version>0.8.0</Version>
-    <RootNamespace>Umbraco.Packager.CI</RootNamespace>     
+    <Version>0.9.0</Version>
+    <RootNamespace>UmbPack</RootNamespace>     
   </PropertyGroup>
 
   <ItemGroup>
