@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Pack NuGet package
-        run: dotnet pack ./src/ --configuration Release --version-suffix ${{ github.run_number }}
+        run: dotnet pack ./src/ --configuration Release -p:Version=0.9.${{ github.run_number }} -p:PackageId=Umbraco.Tools.CmsPackager
 
       - name: Push package to NuGet
         run: dotnet nuget push **/*.nupkg
