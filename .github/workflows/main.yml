@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-dotnet@v1
     
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build ./src/ --configuration Release
 
   deploy: 
     needs: build
@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Pack NuGet package
-        run: dotnet pack --configuration Release
+        run: dotnet pack ./src/ --configuration Release
 
       - name: Push package to NuGet
         run: dotnet nuget push **/*.nupkg

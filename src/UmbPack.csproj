@@ -18,6 +18,8 @@
     <PackageTags>Umbraco</PackageTags>
     <Version>0.9.0</Version>
     <RootNamespace>UmbPack</RootNamespace>     
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
