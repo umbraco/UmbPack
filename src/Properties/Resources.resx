@@ -134,7 +134,7 @@ Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
     <value>Error: {0}</value>
   </data>
   <data name="HelpFooter" xml:space="preserve">
-    <value>For more information see ?? </value>
+    <value>For more information see https://our.umbraco.com/documentation/Extending/Packages/UmbPack </value>
   </data>
   <data name="Init.Author" xml:space="preserve">
     <value>Author</value>
