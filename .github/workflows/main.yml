@@ -1,0 +1,40 @@
+name: Build and deploy
+
+env:
+  PKG_VERSION: 0.9.${{ github.run_number }}
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+        
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+    
+    - name: Build with dotnet
+      run: dotnet build ./src/ --configuration Release
+
+  deploy: 
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Pack NuGet package
+        run: dotnet pack ./src/ 
+              --configuration Release 
+              -p:Version=${{ env.PKG_VERSION }} 
+              -p:PackageId=Umbraco.Tools.Packages
+
+      - name: Push package to NuGet
+        run: dotnet nuget push **/*.nupkg
+              --api-key ${{ secrets.NUGET_DEPLOY_KEY }}
+              --source https://api.nuget.org/v3/index.json
