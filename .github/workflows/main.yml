@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Pack NuGet package
-        run: dotnet pack ./src/ --configuration Release
+        run: dotnet pack ./src/ --configuration Release --version-suffix ${{ github.run_number }}
 
       - name: Push package to NuGet
         run: dotnet nuget push **/*.nupkg
