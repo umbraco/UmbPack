@@ -1,5 +1,8 @@
 name: Build and deploy
 
+env:
+  PKG_VERSION: 0.9.${{ github.run_number }}
+
 on:
   push:
     branches:
@@ -28,7 +31,7 @@ jobs:
       - name: Pack NuGet package
         run: dotnet pack ./src/ 
               --configuration Release 
-              -p:Version=0.9.${{ github.run_number }} 
+              -p:Version=${{ env.PKG_VERSION }} 
               -p:PackageId=Umbraco.Tools.Packages
 
       - name: Push package to NuGet
