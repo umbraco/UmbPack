@@ -79,9 +79,6 @@ namespace Umbraco.Packager.CI.Verbs
             // OK all checks passed - time to upload it
             await UploadPackage(options, packageHelper);
 
-            // Got this far then it got uploaded to our.umb all OK
-            Console.WriteLine(Resources.Push_Complete, filePath);
-
             return 0;
         }
 
@@ -99,8 +96,9 @@ namespace Umbraco.Packager.CI.Verbs
                 };
 
                 var keyParts = packageHelper.SplitKey(options.ApiKey);
+                var packageFileName = Path.GetFileName(options.Package);
 
-                Console.Write(Resources.Push_Uploading, Path.GetFileName(options.Package));
+                Console.WriteLine(Resources.Push_Uploading, packageFileName);
 
                 var url = "/Umbraco/Api/ProjectUpload/UpdatePackage";
 
@@ -128,7 +126,7 @@ namespace Umbraco.Packager.CI.Verbs
                     }
                     else if (httpResponse.IsSuccessStatusCode)
                     {
-                        Console.WriteLine(Resources.Push_Complete);
+                        Console.WriteLine(Resources.Push_Complete, packageFileName);
                         
                         // Response is not reported (at the moment)
                         // var apiReponse = await httpResponse.Content.ReadAsStringAsync();
