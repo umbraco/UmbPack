@@ -82,26 +82,29 @@ namespace Umbraco.Packager.CI.Verbs
             // TODO: Once a current flag is introduced, we can check that instead
             var packagesToArchive = new List<int>();
 
-            foreach (var archive in options.Archive)
+            if (options.Archive != null)
             {
-                if (archive == "current")
+                foreach (var archive in options.Archive)
                 {
-                    // If the archive option is "current" (default), then archive the current package
-                    var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
-                    if (currentPackage != null)
+                    if (archive == "current")
                     {
-                        packagesToArchive.Add(currentPackage.Value<int>("Id"));
+                        // If the archive option is "current" (default), then archive the current package
+                        var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
+                        if (currentPackage != null)
+                        {
+                            packagesToArchive.Add(currentPackage.Value<int>("Id"));
+                        }
                     }
-                }
-                else
-                {
-                    // Convert the archive option to a regex
-                    var archiveRegex = new Regex("^" + archive.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
+                    else
+                    {
+                        // Convert the archive option to a regex
+                        var archiveRegex = new Regex("^" + archive.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
 
-                    // Find packages that match the regex and extract their IDs
-                    var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
+                        // Find packages that match the regex and extract their IDs
+                        var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
 
-                    packagesToArchive.AddRange(archiveIds);
+                        packagesToArchive.AddRange(archiveIds);
+                    }
                 }
             }
 
