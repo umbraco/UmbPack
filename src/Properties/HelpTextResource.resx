@@ -142,7 +142,7 @@
     <value>Push an Umbraco package to our.umbraco.com</value>
   </data>
   <data name="HelpPushArchive" xml:space="preserve">
-    <value>A wildcard pattern to match against existing package files to archive</value>
+    <value>One or more wildcard patterns to match against existing package files to be archived</value>
   </data>
   <data name="HelpPushDotNet" xml:space="preserve">
     <value>Change the required DotNetVersion for the package</value>

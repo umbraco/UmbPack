@@ -133,7 +133,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A wildcard pattern to match against existing package files to archive.
+        ///   Looks up a localized string similar to One or more wildcard patterns to match against existing package files to be archived.
         /// </summary>
         public static string HelpPushArchive {
             get {
