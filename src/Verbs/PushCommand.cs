@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -41,9 +42,9 @@ namespace Umbraco.Packager.CI.Verbs
             HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
 
-        [Option('a', "Archive", Default = "current",
+        [Option('a', "Archive", 
             HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
-        public string Archive { get; set; }
+        public IEnumerable<string> Archive { get; set; }
     }
 
 
@@ -79,24 +80,34 @@ namespace Umbraco.Packager.CI.Verbs
 
             // Archive packages
             // TODO: Once a current flag is introduced, we can check that instead
-            if (options.Archive == "current")
+            var packagesToArchive = new List<int>();
+
+            foreach (var archive in options.Archive)
             {
-                // If the archive option is "current" (default), then archive the current package
-                var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
-                if (currentPackage != null)
+                if (archive == "current")
                 {
-                    await packageHelper.ArchivePackages(keyParts, new[] { currentPackage.Value<int>("Id") });
+                    // If the archive option is "current" (default), then archive the current package
+                    var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
+                    if (currentPackage != null)
+                    {
+                        packagesToArchive.Add(currentPackage.Value<int>("Id"));
+                    }
+                }
+                else
+                {
+                    // Convert the archive option to a regex
+                    var archiveRegex = new Regex("^" + archive.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
+
+                    // Find packages that match the regex and extract their IDs
+                    var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
+
+                    packagesToArchive.AddRange(archiveIds);
                 }
             }
-            else
+
+            if (packagesToArchive.Count > 0)
             {
-                // Convert the archive option to a regex
-                var archiveRegex = new Regex("^" + options.Archive.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
-
-                // Find packages that match the regex and extract their IDs
-                var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
-
-                await packageHelper.ArchivePackages(keyParts, archiveIds);
+                await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct());
             }
 
             // Parse package.xml before upload to print out info
