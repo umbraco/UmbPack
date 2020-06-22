@@ -85,7 +85,7 @@ namespace Umbraco.Packager.CI.Verbs
                 var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
                 if (currentPackage != null)
                 {
-                    await packageHelper.ArchivePackageFiles(keyParts, new[] { currentPackage.Value<int>("Id") });
+                    await packageHelper.ArchivePackages(keyParts, new[] { currentPackage.Value<int>("Id") });
                 }
             }
             else
@@ -96,7 +96,7 @@ namespace Umbraco.Packager.CI.Verbs
                 // Find packages that match the regex and extract their IDs
                 var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
 
-                await packageHelper.ArchivePackageFiles(keyParts, archiveIds);
+                await packageHelper.ArchivePackages(keyParts, archiveIds);
             }
 
             // Parse package.xml before upload to print out info
