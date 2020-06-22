@@ -141,6 +141,9 @@
   <data name="HelpPush" xml:space="preserve">
     <value>Push an Umbraco package to our.umbraco.com</value>
   </data>
+  <data name="HelpPushArchive" xml:space="preserve">
+    <value>A wildcard pattern to match against existing package files to archive</value>
+  </data>
   <data name="HelpPushDotNet" xml:space="preserve">
     <value>Change the required DotNetVersion for the package</value>
   </data>

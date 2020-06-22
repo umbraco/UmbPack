@@ -39,6 +39,10 @@ namespace Umbraco.Packager.CI.Verbs
         [Option('w', "WorksWith", Default = "v850", 
             HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
+
+        [Option('a', "Archive", 
+            HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
+        public string Archive { get; set; }
     }
 
 

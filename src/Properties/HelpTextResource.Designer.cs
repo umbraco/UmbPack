@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class HelpTextResource {
@@ -129,6 +129,15 @@ namespace Umbraco.Packager.CI.Properties {
         public static string HelpPush {
             get {
                 return ResourceManager.GetString("HelpPush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A wildcard pattern to match against existing package files to archive.
+        /// </summary>
+        public static string HelpPushArchive {
+            get {
+                return ResourceManager.GetString("HelpPushArchive", resourceCulture);
             }
         }
         
