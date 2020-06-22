@@ -141,6 +141,14 @@ namespace Umbraco.Packager.CI.Properties{
             }
         }
         
+        ///   Looks up a localized string similar to A wildcard pattern to match against existing package files to archive.
+        /// </summary>
+        public static string HelpPushArchive {
+            get {
+                return ResourceManager.GetString("HelpPushArchive", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Change the required DotNetVersion for the package.
         /// </summary>
