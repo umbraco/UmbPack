@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Handlers;
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using CommandLine;
@@ -40,7 +41,7 @@ namespace Umbraco.Packager.CI.Verbs
             HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
 
-        [Option('a', "Archive", 
+        [Option('a', "Archive", Default = "current",
             HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
         public string Archive { get; set; }
     }
@@ -74,6 +75,27 @@ namespace Umbraco.Packager.CI.Verbs
             if (packages != null)
             { 
                 packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath);
+            }
+
+            // Archive packages
+            if (options.Archive == "current")
+            {
+                // If the archive option is "current" (default), then archive the current package
+                var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
+                if (currentPackage != null)
+                {
+                    await ArchivePackages(new[] { currentPackage.Value<int>("Id") });
+                }
+            }
+            else
+            {
+                // Convert the archive option to a regex
+                var archiveRegex = new Regex("^" + options.Archive.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
+
+                // Find packages that match the regex and extract their IDs
+                var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
+
+                await ArchivePackages(archiveIds);
             }
 
             // Parse package.xml before upload to print out info
@@ -146,7 +168,10 @@ namespace Umbraco.Packager.CI.Verbs
             }
         }
 
+        private static async Task ArchivePackages(int[] id)
+        {
 
+        }
 
         /// <summary>
         ///  returns the version compatibility string for uploading the package
