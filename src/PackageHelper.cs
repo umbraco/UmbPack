@@ -116,7 +116,7 @@ namespace Umbraco.Packager.CI
             }
         }
 
-        public async Task ArchivePackageFiles(ApiKeyModel keyParts, int[] ids)
+        public async Task ArchivePackages(ApiKeyModel keyParts, int[] ids)
         {
             var url = "Umbraco/Api/ProjectUpload/ArchiveProjectFiles";
             try
