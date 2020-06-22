@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -116,7 +117,7 @@ namespace Umbraco.Packager.CI
             }
         }
 
-        public async Task ArchivePackages(ApiKeyModel keyParts, int[] ids)
+        public async Task ArchivePackages(ApiKeyModel keyParts, IEnumerable<int> ids)
         {
             var url = "Umbraco/Api/ProjectUpload/ArchiveProjectFiles";
             try
