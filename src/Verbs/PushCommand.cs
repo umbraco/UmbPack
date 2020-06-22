@@ -78,13 +78,14 @@ namespace Umbraco.Packager.CI.Verbs
             }
 
             // Archive packages
+            // TODO: Once a current flag is introduced, we can check that instead
             if (options.Archive == "current")
             {
                 // If the archive option is "current" (default), then archive the current package
                 var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
                 if (currentPackage != null)
                 {
-                    await ArchivePackages(new[] { currentPackage.Value<int>("Id") });
+                    await packageHelper.ArchivePackageFiles(keyParts, new[] { currentPackage.Value<int>("Id") });
                 }
             }
             else
@@ -95,7 +96,7 @@ namespace Umbraco.Packager.CI.Verbs
                 // Find packages that match the regex and extract their IDs
                 var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
 
-                await ArchivePackages(archiveIds);
+                await packageHelper.ArchivePackageFiles(keyParts, archiveIds);
             }
 
             // Parse package.xml before upload to print out info
@@ -169,10 +170,6 @@ namespace Umbraco.Packager.CI.Verbs
             }
         }
 
-        private static async Task ArchivePackages(int[] id)
-        {
-
-        }
 
         /// <summary>
         ///  returns the version compatibility string for uploading the package
