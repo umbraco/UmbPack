@@ -77,12 +77,12 @@ namespace Umbraco.Packager.CI.Verbs
             var packageInfo = Parse.PackageXml(filePath);
 
             // OK all checks passed - time to upload it
-            await UploadPackage(options, packageHelper);
+            await UploadPackage(options, packageHelper, packageInfo);
 
             return 0;
         }
 
-        private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper)
+        private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper, PackageInfo packageInfo)
         {
             try
             {
@@ -117,6 +117,7 @@ namespace Umbraco.Packager.CI.Verbs
                     form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
                     form.Add(new StringContent("package"), "fileType");
                     form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
+                    form.Add(new StringContent(packageInfo.VersionString), "packageVersion");
 
                     var httpResponse = await client.PostAsync(url, form);
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
