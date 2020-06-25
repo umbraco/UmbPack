@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties {
+namespace Umbraco.Packager.CI.Properties{
     using System;
     
     
@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class HelpTextResource {
@@ -133,6 +133,15 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make this package the current package file.
+        /// </summary>
+        public static string HelpPushCurrent {
+            get {
+                return ResourceManager.GetString("HelpPushCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change the required DotNetVersion for the package.
         /// </summary>
         public static string HelpPushDotNet {
@@ -156,15 +165,6 @@ namespace Umbraco.Packager.CI.Properties {
         public static string HelpPushPackage {
             get {
                 return ResourceManager.GetString("HelpPushPackage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Make this package the current package file.
-        /// </summary>
-        public static string HelpPushPublish {
-            get {
-                return ResourceManager.GetString("HelpPushPublish", resourceCulture);
             }
         }
         

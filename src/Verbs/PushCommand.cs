@@ -29,8 +29,8 @@ namespace Umbraco.Packager.CI.Verbs
         public string ApiKey { get; set; }
 
         [Option('c', "Current", Default = "true", 
-            HelpText = "HelpPushPublish", ResourceType = typeof(HelpTextResource))]
-        public string Publish { get; set; }
+            HelpText = "HelpPushCurrent", ResourceType = typeof(HelpTextResource))]
+        public string Current { get; set; }
 
         [Option("DotNetVersion", Default = "4.7.2", 
             HelpText = "HelpPushDotNet", ResourceType = typeof(HelpTextResource))]
@@ -113,7 +113,7 @@ namespace Umbraco.Packager.CI.Verbs
                         FileName = fileInfo.Name
                     };
                     form.Add(content);
-                    form.Add(new StringContent(ParsePublishFlag(options.Publish)), "isCurrent");
+                    form.Add(new StringContent(ParseCurrentFlag(options.Current)), "isCurrent");
                     form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
                     form.Add(new StringContent("package"), "fileType");
                     form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
@@ -161,9 +161,9 @@ namespace Umbraco.Packager.CI.Verbs
             return new StringContent(JsonConvert.SerializeObject(versions));
         }
 
-        private static string ParsePublishFlag(string publish)
+        private static string ParseCurrentFlag(string current)
         {
-            if (bool.TryParse(publish, out bool result))
+            if (bool.TryParse(current, out bool result))
             {
                 return result.ToString();
             }
