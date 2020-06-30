@@ -141,6 +141,9 @@
   <data name="HelpPush" xml:space="preserve">
     <value>Push an Umbraco package to our.umbraco.com</value>
   </data>
+  <data name="HelpPushCurrent" xml:space="preserve">
+    <value>Make this package the current package file</value>
+  </data>
   <data name="HelpPushDotNet" xml:space="preserve">
     <value>Change the required DotNetVersion for the package</value>
   </data>
@@ -149,9 +152,6 @@
   </data>
   <data name="HelpPushPackage" xml:space="preserve">
     <value>Path to the package.zip you wish to push</value>
-  </data>
-  <data name="HelpPushPublish" xml:space="preserve">
-    <value>Make this package the current package file</value>
   </data>
   <data name="HelpPushWorks" xml:space="preserve">
     <value>Compatible Umbraco versions (in the form v850,v840,v830)</value>
