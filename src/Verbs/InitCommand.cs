@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -127,6 +128,18 @@ namespace Umbraco.Packager.CI.Verbs
                         new XElement("name", options.Author),
                         new XElement("website", options.Website)));
 
+            var contributors = options.Contributors?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                   .Where(x => !string.IsNullOrWhiteSpace(x))
+                   .Select(s => s.Trim())
+                   .ToArray();
+
+            if (contributors.Length > 0)
+            {
+                info.Add(new XElement("contributors", 
+                    contributors.Select(c => new XElement("contributor", c))
+                ));
+            }
+
             info.Add(new XElement("readme",
                 new XCData(options.Description)));
 
@@ -144,7 +157,6 @@ namespace Umbraco.Packager.CI.Verbs
             node.Add(new XElement("DataTypes"));
 
             return node;
-
         }
 
         /// <summary>
@@ -250,7 +262,7 @@ namespace Umbraco.Packager.CI.Verbs
             public string Author { get; set; }
             public string Website { get; set; }
             public string Licence { get; set; }
-
+            public string Contributors { get; set; }
             public SemVersion UmbracoVersion { get; set; }
             public string Description { get; set; }
         }
