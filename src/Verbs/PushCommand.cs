@@ -42,7 +42,7 @@ namespace Umbraco.Packager.CI.Verbs
             HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
 
-        [Option('a', "Archive", 
+        [Option('a', "Archive", Separator = ' ', 
             HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
         public IEnumerable<string> Archive { get; set; }
     }
@@ -87,12 +87,11 @@ namespace Umbraco.Packager.CI.Verbs
                 archivePatterns.AddRange(options.Archive);
             }
 
-            // TODO: Once a "Current" option is introduced, which makes the current package being upload "Current"
-            // then uncomment the following lines
-            //if (options.Current && !archivePatterns.Contains("current"))
-            //{
-            //    archivePatterns.Add("current");
-            //}
+            // if the new package will be set to current, archive the previous current package
+            // if (options.Current == "true" && !archivePatterns.Contains("current"))
+            // {
+            //     archivePatterns.Add("current");
+            // }
 
             if (archivePatterns.Count > 0)
             {
