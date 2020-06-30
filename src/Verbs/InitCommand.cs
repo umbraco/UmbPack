@@ -73,6 +73,8 @@ namespace Umbraco.Packager.CI.Verbs
 
             setup.Licence = GetUserInput(Resources.Init_Licence, Defaults.Init_Licence);
 
+            setup.Contributors = GetUserInput(Resources.Init_Contributors, null);
+
             // play it back for confirmation
             Console.WriteLine();
             Console.WriteLine(Resources.Init_Confirm, packageFile);
