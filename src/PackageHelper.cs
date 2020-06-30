@@ -124,7 +124,7 @@ namespace Umbraco.Packager.CI
             {
                 using (var httpClient = GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
                 {
-                    var httpResponse = await httpClient.PostAsJsonAsync(url, new { ids });
+                    var httpResponse = await httpClient.PostAsJsonAsync(url, ids);
 
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
