@@ -133,7 +133,7 @@ namespace Umbraco.Packager.CI.Verbs
                    .Select(s => s.Trim())
                    .ToArray();
 
-            if (contributors.Length > 0)
+            if (contributors?.Length > 0)
             {
                 info.Add(new XElement("contributors", 
                     contributors.Select(c => new XElement("contributor", c))
