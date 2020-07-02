@@ -72,6 +72,7 @@ namespace Umbraco.Packager.CI.Verbs
             // gets a package list from our.umbraco
             // if the api key is invalid we will also find out here.
             var packages = await packageHelper.GetPackageList(keyParts);
+            var currentPackageId = await packageHelper.GetCurrentPackageFileId(keyParts);
 
             if (packages != null)
             { 
@@ -88,10 +89,10 @@ namespace Umbraco.Packager.CI.Verbs
             }
 
             // if the new package will be set to current, archive the previous current package
-            // if (options.Current == "true" && !archivePatterns.Contains("current"))
-            // {
-            //     archivePatterns.Add("current");
-            // }
+            if (options.Current == "true" && !archivePatterns.Contains("current"))
+            {
+                archivePatterns.Add("current");
+            }
 
             if (archivePatterns.Count > 0)
             {
@@ -100,11 +101,7 @@ namespace Umbraco.Packager.CI.Verbs
                     if (archivePattern == "current")
                     {
                         // If the archive option is "current", then archive the current package
-                        var currentPackage = packages.FirstOrDefault(x => x.Value<bool>("Current"));
-                        if (currentPackage != null)
-                        {
-                            packagesToArchive.Add(currentPackage.Value<int>("Id"));
-                        }
+                        packagesToArchive.Add(int.Parse(currentPackageId));
                     }
                     else
                     {
@@ -122,6 +119,7 @@ namespace Umbraco.Packager.CI.Verbs
             if (packagesToArchive.Count > 0)
             {
                 await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct());
+                Console.WriteLine($"Archived {packagesToArchive.Count} packages matching the archive pattern.");
             }
 
             // Parse package.xml before upload to print out info

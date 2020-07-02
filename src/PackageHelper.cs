@@ -138,6 +138,31 @@ namespace Umbraco.Packager.CI
                 throw ex;
             }
         }
+        
+        public async Task<string> GetCurrentPackageFileId(ApiKeyModel keyParts)
+        {
+            var url = "Umbraco/Api/ProjectUpload/GetCurrentPackageFileId";
+            try
+            {
+                using (var httpClient = GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
+                {
+                    var httpResponse = await httpClient.GetAsync(url);
+
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        WriteError(Resources.Push_ApiKeyInvalid);
+                        Environment.Exit(5); // ERROR_ACCESS_DENIED
+                    }
+
+                    var apiResponse = await httpResponse.Content.ReadAsStringAsync();
+                    return apiResponse;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw ex;
+            }
+        }
 
         /// <summary>
         ///  change the colour of the console, write an error and reset the colour back.
