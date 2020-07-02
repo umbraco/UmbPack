@@ -144,6 +144,9 @@
   <data name="HelpPushCurrent" xml:space="preserve">
     <value>Make this package the current package file</value>
   </data>
+  <data name="HelpPushArchive" xml:space="preserve">
+    <value>One or more wildcard patterns to match against existing package files to be archived</value>
+  </data>
   <data name="HelpPushDotNet" xml:space="preserve">
     <value>Change the required DotNetVersion for the package</value>
   </data>
