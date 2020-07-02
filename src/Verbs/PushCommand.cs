@@ -88,12 +88,6 @@ namespace Umbraco.Packager.CI.Verbs
                 archivePatterns.AddRange(options.Archive);
             }
 
-            // if the new package will be set to current, archive the previous current package
-            if (options.Current == "true" && !archivePatterns.Contains("current"))
-            {
-                archivePatterns.Add("current");
-            }
-
             if (archivePatterns.Count > 0)
             {
                 foreach (var archivePattern in archivePatterns)
