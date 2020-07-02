@@ -101,7 +101,8 @@ namespace Umbraco.Packager.CI.Verbs
                     if (archivePattern == "current")
                     {
                         // If the archive option is "current", then archive the current package
-                        packagesToArchive.Add(int.Parse(currentPackageId));
+                        if (currentPackageId != "0")
+                            packagesToArchive.Add(int.Parse(currentPackageId));
                     }
                     else
                     {
