@@ -160,6 +160,6 @@
     <value>Compatible Umbraco versions (in the form v850,v840,v830)</value>
   </data>
   <data name="HelpPackProperties" xml:space="preserve">
-    <value>Properties to replace in the package file</value>
+    <value>Properties to replace in the package.xml file</value>
   </data>
 </root>

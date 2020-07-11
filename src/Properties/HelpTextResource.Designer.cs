@@ -116,7 +116,7 @@ namespace Umbraco.Packager.CI.Properties
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Properties to replace in the package file.
+        ///   Looks up a localized string similar to Properties to replace in the package.xml file.
         /// </summary>
         public static string HelpPackProperties {
             get {
