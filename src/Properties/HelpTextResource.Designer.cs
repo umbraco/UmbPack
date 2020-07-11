@@ -8,7 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties{
+namespace Umbraco.Packager.CI.Properties
+{
     using System;
     
     
@@ -106,6 +107,15 @@ namespace Umbraco.Packager.CI.Properties{
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An explicit file name to give the generated package file.
+        /// </summary>
+        public static string HelpPackFileName {
+            get {
+                return ResourceManager.GetString("HelpPackFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specified the directory the created package will be saved to.
         /// </summary>
         public static string HelpPackOutput {
@@ -133,20 +143,20 @@ namespace Umbraco.Packager.CI.Properties{
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Make this package the current package file.
-        /// </summary>
-        public static string HelpPushCurrent {
-            get {
-                return ResourceManager.GetString("HelpPushCurrent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to One or more wildcard patterns to match against existing package files to be archived.
         /// </summary>
         public static string HelpPushArchive {
             get {
                 return ResourceManager.GetString("HelpPushArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make this package the current package file.
+        /// </summary>
+        public static string HelpPushCurrent {
+            get {
+                return ResourceManager.GetString("HelpPushCurrent", resourceCulture);
             }
         }
         
