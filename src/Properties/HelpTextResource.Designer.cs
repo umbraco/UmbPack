@@ -107,20 +107,20 @@ namespace Umbraco.Packager.CI.Properties
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An explicit file name to give the generated package file.
-        /// </summary>
-        public static string HelpPackFileName {
-            get {
-                return ResourceManager.GetString("HelpPackFileName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Specified the directory the created package will be saved to.
         /// </summary>
         public static string HelpPackOutput {
             get {
                 return ResourceManager.GetString("HelpPackOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An explicit file name to give the generated package file.
+        /// </summary>
+        public static string HelpPackPackageFileName {
+            get {
+                return ResourceManager.GetString("HelpPackPackageFileName", resourceCulture);
             }
         }
         

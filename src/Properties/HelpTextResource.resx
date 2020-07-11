@@ -159,7 +159,7 @@
   <data name="HelpPushWorks" xml:space="preserve">
     <value>Compatible Umbraco versions (in the form v850,v840,v830)</value>
   </data>
-  <data name="HelpPackFileName" xml:space="preserve">
+  <data name="HelpPackPackageFileName" xml:space="preserve">
     <value>An explicit file name to give the generated package file</value>
   </data>
 </root>

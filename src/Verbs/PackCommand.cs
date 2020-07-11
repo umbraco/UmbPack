@@ -28,10 +28,10 @@ namespace Umbraco.Packager.CI.Verbs
             ResourceType = typeof(HelpTextResource))]
         public string Version { get; set; }
 
-        [Option('n', "FileName",
-            HelpText = "HelpPackFileName",
+        [Option('n', "PackageFileName",
+            HelpText = "HelpPackPackageFileName",
             ResourceType = typeof(HelpTextResource))]
-        public string FileName { get; set; }
+        public string PackageFileName { get; set; }
     }
 
 
@@ -108,8 +108,8 @@ namespace Umbraco.Packager.CI.Verbs
             Console.WriteLine(Resources.Pack_GetPackageName);
 
             // work out what we are going to call the package
-            var packageFileName = !string.IsNullOrWhiteSpace(options.FileName)
-                ? options.FileName
+            var packageFileName = !string.IsNullOrWhiteSpace(options.PackageFileName)
+                ? options.PackageFileName
                 : GetPackageFileName(options.OutputDirectory, packageXml, version);
 
             Console.WriteLine(Resources.Pack_AddPackageFiles);
