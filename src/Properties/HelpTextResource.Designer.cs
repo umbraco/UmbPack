@@ -8,7 +8,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties{
+namespace Umbraco.Packager.CI.Properties
+{
     using System;
     
     
@@ -115,6 +116,15 @@ namespace Umbraco.Packager.CI.Properties{
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Properties to replace in the package file.
+        /// </summary>
+        public static string HelpPackProperties {
+            get {
+                return ResourceManager.GetString("HelpPackProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Override the version defined in the package.xml file.
         /// </summary>
         public static string HelpPackVersion {
@@ -133,20 +143,20 @@ namespace Umbraco.Packager.CI.Properties{
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Make this package the current package file.
-        /// </summary>
-        public static string HelpPushCurrent {
-            get {
-                return ResourceManager.GetString("HelpPushCurrent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to One or more wildcard patterns to match against existing package files to be archived.
         /// </summary>
         public static string HelpPushArchive {
             get {
                 return ResourceManager.GetString("HelpPushArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make this package the current package file.
+        /// </summary>
+        public static string HelpPushCurrent {
+            get {
+                return ResourceManager.GetString("HelpPushCurrent", resourceCulture);
             }
         }
         
