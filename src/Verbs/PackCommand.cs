@@ -99,11 +99,12 @@ namespace Umbraco.Packager.CI.Verbs
             Console.WriteLine(Resources.Pack_LoadingFile, packageFile);
 
             // load the package xml
-            var packageXmlContents = File.ReadAllText(packageFile);
+            XElement packageXml = null;
 
-            // Replace property tokens
             if (!string.IsNullOrWhiteSpace(options.Properties))
             {
+                var packageXmlContents = File.ReadAllText(packageFile);
+
                 var props = options.Properties.Split(";", StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Split('='))
                     .ToDictionary(x => x[0], x => x[1]);
@@ -112,10 +113,13 @@ namespace Umbraco.Packager.CI.Verbs
                 {
                     packageXmlContents = packageXmlContents.Replace($"${prop.Key}$", prop.Value);
                 }
-            }
 
-            // Parse the package XML contents
-            var packageXml = XElement.Parse(packageXmlContents);
+                packageXml = XElement.Parse(packageXmlContents);
+            }
+            else
+            {
+                packageXml = XElement.Load(packageFile);
+            }
 
             Console.WriteLine(Resources.Pack_UpdatingVersion);
 
