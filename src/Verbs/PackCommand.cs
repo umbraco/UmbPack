@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using CommandLine;
-
+using Umbraco.Packager.CI.Extensions;
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
@@ -109,8 +109,11 @@ namespace Umbraco.Packager.CI.Verbs
 
             // work out what we are going to call the package
             var packageFileName = !string.IsNullOrWhiteSpace(options.PackageFileName)
-                ? options.PackageFileName
-                : GetPackageFileName(options.OutputDirectory, packageXml, version);
+                ? options.PackageFileName.EnsureEndsWith(".zip")
+                : GetPackageFileName(packageXml, version);
+
+            // work out what where we are going to output the package to
+            var packageOutputPath = Path.Combine(options.OutputDirectory, packageFileName);
 
             Console.WriteLine(Resources.Pack_AddPackageFiles);
             // add any files based on what is already in the package.xml
@@ -123,7 +126,7 @@ namespace Umbraco.Packager.CI.Verbs
             BuildPackageFolder(packageXml, workingDir, buildFolder);
             Directory.Delete(workingDir, true);
 
-            CreateZip(buildFolder, packageFileName);
+            CreateZip(buildFolder, packageOutputPath);
 
             Console.WriteLine(Resources.Pack_Complete);   
             Directory.Delete(buildFolder, true);
@@ -142,9 +145,8 @@ namespace Umbraco.Packager.CI.Verbs
             return folder;
         }
 
-        private static string GetPackageFileName(string folder, XElement packageFile, string version)
+        private static string GetPackageFileName(XElement packageFile, string version)
         {
-
             var nameNode = packageFile.Element("info")?.Element("package")?.Element("name");
             if (nameNode != null)
             {
@@ -152,7 +154,7 @@ namespace Umbraco.Packager.CI.Verbs
                     .Replace(".", "_")
                     .Replace(" ", "_");
 
-                return Path.Combine(folder, $"{name}_{version}.zip");
+                return $"{name}_{version}.zip";
             }
 
             Environment.Exit(2);
