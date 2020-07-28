@@ -139,6 +139,9 @@ Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
   <data name="Init.Author" xml:space="preserve">
     <value>Author</value>
   </data>
+  <data name="Init.Contributors" xml:space="preserve">
+    <value>Contributors</value>
+  </data>
   <data name="Init.Complete" xml:space="preserve">
     <value>Package file saved</value>
   </data>
