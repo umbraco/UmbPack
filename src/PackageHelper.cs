@@ -185,10 +185,10 @@ namespace Umbraco.Packager.CI
         /// <summary>
         ///  change the colour of the console, write a warning and reset the colour back.
         /// </summary>
-        public void WriteWarning(string error, params object[] parameters)
+        public void WriteWarning(string warning, params object[] parameters)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(error, parameters);
+            Console.WriteLine(warning, parameters);
             Console.ResetColor();
         }
 
