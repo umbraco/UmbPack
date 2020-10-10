@@ -8,8 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties
-{
+namespace Umbraco.Packager.CI.Properties {
     using System;
     
     
@@ -184,6 +183,15 @@ namespace Umbraco.Packager.CI.Properties
         public static string HelpPushPackage {
             get {
                 return ResourceManager.GetString("HelpPushPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore duplicate package names.
+        /// </summary>
+        public static string HelpPushSkipDuplicates {
+            get {
+                return ResourceManager.GetString("HelpPushSkipDuplicates", resourceCulture);
             }
         }
         
