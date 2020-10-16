@@ -90,168 +90,168 @@ namespace Umbraco.Packager.CI.Verbs
             var packageInfo = Parse.PackageXml(filePath);
 
             // OK all checks passed - time to upload it
-            await UploadPackage(options, packageHelper, packageInfo);   
+            await UploadPackage(options, packageHelper, packageInfo);
 
             return 0;
         }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="packageHelper"></param>
-    /// <param name="packages"></param>
-    /// <returns></returns>
-    private static async Task ArchivePackages(PushOptions options, PackageHelper packageHelper, JArray packages)
-    {
-        var keyParts = packageHelper.SplitKey(options.ApiKey);
-
-        // Archive packages
-        var archivePatterns = new List<string>();
-        var packagesToArchive = new List<int>();
-
-        var currentPackageId = await packageHelper.GetCurrentPackageFileId(keyParts);
-
-        if (options.Archive != null)
+        /// <summary>
+        /// Determines package files for archiving, and awaits packagehelper completing the archiving action
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="packageHelper"></param>
+        /// <param name="packages"></param>
+        /// <returns></returns>
+        private static async Task ArchivePackages(PushOptions options, PackageHelper packageHelper, JArray packages)
         {
-            archivePatterns.AddRange(options.Archive);
-        }
-
-        if (archivePatterns.Count > 0)
-        {
-            foreach (var archivePattern in archivePatterns)
-            {
-                if (archivePattern == "current")
-                {
-                    // If the archive option is "current", then archive the current package
-                    if (currentPackageId != "0")
-                        packagesToArchive.Add(int.Parse(currentPackageId));
-                }
-                else
-                {
-                    // Convert the archive option to a regex
-                    var archiveRegex = new Regex("^" + archivePattern.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
-
-                    // Find packages that match the regex and extract their IDs
-                    var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
-
-                    packagesToArchive.AddRange(archiveIds);
-                }
-            }
-        }
-
-        if (packagesToArchive.Count > 0)
-        {
-            await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct());
-            Console.WriteLine($"Archived {packagesToArchive.Count} packages matching the archive pattern.");
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="options"></param>
-    /// <param name="packageHelper"></param>
-    /// <param name="packageInfo"></param>
-    /// <returns></returns>
-    private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper, PackageInfo packageInfo)
-    {
-        try
-        {
-            // HttpClient will use this event handler to give us
-            // Reporting on how its progress the file upload
-            var processMsgHandler = new ProgressMessageHandler(new HttpClientHandler());
-            processMsgHandler.HttpSendProgress += (sender, e) =>
-            {
-                    // Could try to reimplement progressbar - but that library did not work in GH Actions :(
-                    var percent = e.ProgressPercentage;
-            };
-
             var keyParts = packageHelper.SplitKey(options.ApiKey);
-            var packageFileName = Path.GetFileName(options.Package);
 
-            Console.WriteLine(Resources.Push_Uploading, packageFileName);
+            // Archive packages
+            var archivePatterns = new List<string>();
+            var packagesToArchive = new List<int>();
 
-            var url = "/Umbraco/Api/ProjectUpload/UpdatePackage";
+            var currentPackageId = await packageHelper.GetCurrentPackageFileId(keyParts);
 
-            using (var client = packageHelper.GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
+            if (options.Archive != null)
             {
-                MultipartFormDataContent form = new MultipartFormDataContent();
-                var fileInfo = new FileInfo(options.Package);
-                var content = new StreamContent(fileInfo.OpenRead());
-                content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-                {
-                    Name = "file",
-                    FileName = fileInfo.Name
-                };
-                form.Add(content);
-                form.Add(new StringContent(ParseCurrentFlag(options.Current)), "isCurrent");
-                form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
-                form.Add(new StringContent("package"), "fileType");
-                form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
-                form.Add(new StringContent(packageInfo.VersionString), "packageVersion");
+                archivePatterns.AddRange(options.Archive);
+            }
 
-                var httpResponse = await client.PostAsync(url, form);
-                if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+            if (archivePatterns.Count > 0)
+            {
+                foreach (var archivePattern in archivePatterns)
                 {
-                    packageHelper.WriteError(Resources.Push_ApiKeyInvalid);
-                    Environment.Exit(5); // ERROR_ACCESS_DENIED
-                }
-                else if (httpResponse.IsSuccessStatusCode)
-                {
-                    Console.WriteLine(Resources.Push_Complete, packageFileName);
+                    if (archivePattern == "current")
+                    {
+                        // If the archive option is "current", then archive the current package
+                        if (currentPackageId != "0")
+                            packagesToArchive.Add(int.Parse(currentPackageId));
+                    }
+                    else
+                    {
+                        // Convert the archive option to a regex
+                        var archiveRegex = new Regex("^" + archivePattern.Replace(".", "\\.").Replace("*", "(.*)") + "$", RegexOptions.IgnoreCase);
 
-                    // Response is not reported (at the moment)
-                    // var apiReponse = await httpResponse.Content.ReadAsStringAsync();
-                    // Console.WriteLine(apiReponse);
+                        // Find packages that match the regex and extract their IDs
+                        var archiveIds = packages.Where(x => archiveRegex.IsMatch(x.Value<string>("Name"))).Select(x => x.Value<int>("Id")).ToArray();
+
+                        packagesToArchive.AddRange(archiveIds);
+                    }
                 }
             }
+
+            if (packagesToArchive.Count > 0)
+            {
+                await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct());
+                Console.WriteLine($"Archived {packagesToArchive.Count} packages matching the archive pattern.");
+            }
         }
-        catch (HttpRequestException ex)
+
+        /// <summary>
+        /// Uploads the package to the our.umbraco.com package repository
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="packageHelper"></param>
+        /// <param name="packageInfo"></param>
+        /// <returns></returns>
+        private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper, PackageInfo packageInfo)
         {
-            // Could get network error or our.umb down
-            Console.WriteLine(Resources.Error, ex);
-            throw;
+            try
+            {
+                // HttpClient will use this event handler to give us
+                // Reporting on how its progress the file upload
+                var processMsgHandler = new ProgressMessageHandler(new HttpClientHandler());
+                processMsgHandler.HttpSendProgress += (sender, e) =>
+                {
+                // Could try to reimplement progressbar - but that library did not work in GH Actions :(
+                var percent = e.ProgressPercentage;
+                };
+
+                var keyParts = packageHelper.SplitKey(options.ApiKey);
+                var packageFileName = Path.GetFileName(options.Package);
+
+                Console.WriteLine(Resources.Push_Uploading, packageFileName);
+
+                var url = "/Umbraco/Api/ProjectUpload/UpdatePackage";
+
+                using (var client = packageHelper.GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
+                {
+                    MultipartFormDataContent form = new MultipartFormDataContent();
+                    var fileInfo = new FileInfo(options.Package);
+                    var content = new StreamContent(fileInfo.OpenRead());
+                    content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = "file",
+                        FileName = fileInfo.Name
+                    };
+                    form.Add(content);
+                    form.Add(new StringContent(ParseCurrentFlag(options.Current)), "isCurrent");
+                    form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
+                    form.Add(new StringContent("package"), "fileType");
+                    form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
+                    form.Add(new StringContent(packageInfo.VersionString), "packageVersion");
+
+                    var httpResponse = await client.PostAsync(url, form);
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        packageHelper.WriteError(Resources.Push_ApiKeyInvalid);
+                        Environment.Exit(5); // ERROR_ACCESS_DENIED
+                    }
+                    else if (httpResponse.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine(Resources.Push_Complete, packageFileName);
+
+                        // Response is not reported (at the moment)
+                        // var apiReponse = await httpResponse.Content.ReadAsStringAsync();
+                        // Console.WriteLine(apiReponse);
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Could get network error or our.umb down
+                Console.WriteLine(Resources.Error, ex);
+                throw;
+            }
         }
-    }
 
 
-    /// <summary>
-    ///  returns the version compatibility string for uploading the package
-    /// </summary>
-    /// <param name="worksWithString"></param>
-    /// <returns></returns>
-    private static StringContent GetVersionCompatibility(string worksWithString)
-    {
-        // TODO: Workout how we can get a latest version from our ? 
-        // TODO: Maybe accept wild cards (8.* -> 8.5.0,8.4.0,8.3.0)
-        // TODO: Work like nuget e.g '> 8.4.0' 
-        var versions = worksWithString
-                            .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                            .Select(x => new UmbracoVersion() { Version = x });
-
-        return new StringContent(JsonConvert.SerializeObject(versions));
-    }
-
-    private static string ParseCurrentFlag(string current)
-    {
-        if (bool.TryParse(current, out bool result))
+        /// <summary>
+        ///  returns the version compatibility string for uploading the package
+        /// </summary>
+        /// <param name="worksWithString"></param>
+        /// <returns></returns>
+        private static StringContent GetVersionCompatibility(string worksWithString)
         {
-            return result.ToString();
+            // TODO: Workout how we can get a latest version from our ? 
+            // TODO: Maybe accept wild cards (8.* -> 8.5.0,8.4.0,8.3.0)
+            // TODO: Work like nuget e.g '> 8.4.0' 
+            var versions = worksWithString
+                                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                .Select(x => new UmbracoVersion() { Version = x });
+
+            return new StringContent(JsonConvert.SerializeObject(versions));
         }
 
-        return false.ToString();
-    }
+        private static string ParseCurrentFlag(string current)
+        {
+            if (bool.TryParse(current, out bool result))
+            {
+                return result.ToString();
+            }
 
-    /// <summary>
-    ///  taken from the source of our.umbraco.com
-    /// </summary>
-    private class UmbracoVersion
-    {
-        public string Version { get; set; }
+            return false.ToString();
+        }
 
-        // We don't need to supply name. but it is in the orginal model.
-        // public string Name { get; set; }
+        /// <summary>
+        ///  taken from the source of our.umbraco.com
+        /// </summary>
+        private class UmbracoVersion
+        {
+            public string Version { get; set; }
+
+            // We don't need to supply name. but it is in the orginal model.
+            // public string Name { get; set; }
+        }
     }
-}
 }
