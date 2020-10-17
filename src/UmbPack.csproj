@@ -7,16 +7,20 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>UmbPack</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-
     <AssemblyName>UmbPack</AssemblyName>
     <AssemblyTitle>UmbPack</AssemblyTitle>
-    <Company>The Umbraco Community</Company>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageTags>Umbraco</PackageTags>
-    <Version>0.9.0</Version>
-    <RootNamespace>UmbPack</RootNamespace>     
+    <RootNamespace>UmbPack</RootNamespace>
+
+    <Title>UmbPack</Title>
+    <Description>UmbPack is a CLI tool for building and deploying Umbraco packages</Description>
+    <Authors>The Umbraco Community</Authors>
+    <PackageProjectUrl>https://github.com/umbraco/UmbPack</PackageProjectUrl>
+    <PackageTags>umbraco</PackageTags>
+    <RepositoryUrl>https://github.com/umbraco/UmbPack</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
@@ -62,7 +66,5 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  
-  
 
 </Project>
