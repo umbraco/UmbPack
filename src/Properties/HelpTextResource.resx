@@ -162,7 +162,7 @@
   <data name="HelpPackPackageFileName" xml:space="preserve">
     <value>An explicit file name to give the generated package file</value>
   </data>
-  <data name="HelpPushAllowDuplicates" xml:space="preserve">
-    <value>Allow pushing duplicate package names</value>
+  <data name="HelpPushSkipDuplicates" xml:space="preserve">
+    <value>Ignore duplicate package names</value>
   </data>
 </root>

@@ -253,7 +253,7 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
   <data name="Push.Uploading" xml:space="preserve">
     <value>Uploading {0} to our.umbraco.com ...</value>
   </data>
-  <data name="Push.DuplicateAllowed" xml:space="preserve">
-    <value>A duplicate of {0} has been pushed because AllowDuplicate name was enabled. {1} occurrences of the package already exists</value>
+  <data name="Push.PackageSkipped" xml:space="preserve">
+    <value>Skipped pushing '{0}' - package file already exists</value>
   </data>
 </root>
