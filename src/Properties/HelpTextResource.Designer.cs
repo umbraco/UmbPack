@@ -195,5 +195,14 @@ namespace Umbraco.Packager.CI.Properties
                 return ResourceManager.GetString("HelpPushWorks", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   List of properties to replace in the package.xml
+        /// </summary>
+        public static string HelpPackProperties {
+            get {
+                return ResourceManager.GetString("HelpPackProperties", resourceCulture);
+            }
+        }
     }
 }
