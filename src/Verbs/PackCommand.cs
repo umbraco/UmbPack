@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -28,6 +29,11 @@ namespace Umbraco.Packager.CI.Verbs
             ResourceType = typeof(HelpTextResource))]
         public string Version { get; set; }
 
+        [Option('p', "Properties",
+            HelpText = "HelpPackProperties",
+            ResourceType = typeof(HelpTextResource))]
+        public string Properties { get; set; }
+      
         [Option('n', "PackageFileName",
             HelpText = "HelpPackPackageFileName",
             ResourceType = typeof(HelpTextResource))]
@@ -98,7 +104,27 @@ namespace Umbraco.Packager.CI.Verbs
             Console.WriteLine(Resources.Pack_LoadingFile, packageFile);
 
             // load the package xml
-            var packageXml = XElement.Load(packageFile);
+            XElement packageXml = null;
+
+            if (!string.IsNullOrWhiteSpace(options.Properties))
+            {
+                var packageXmlContents = File.ReadAllText(packageFile);
+
+                var props = options.Properties.Split(";", StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Split('='))
+                    .ToDictionary(x => x[0], x => x[1]);
+
+                foreach (var prop in props)
+                {
+                    packageXmlContents = packageXmlContents.Replace($"${prop.Key}$", prop.Value);
+                }
+
+                packageXml = XElement.Parse(packageXmlContents);
+            }
+            else
+            {
+                packageXml = XElement.Load(packageFile);
+            }
 
             Console.WriteLine(Resources.Pack_UpdatingVersion);
 
