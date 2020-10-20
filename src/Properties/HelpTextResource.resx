@@ -162,4 +162,7 @@
   <data name="HelpPackProperties" xml:space="preserve">
     <value>Properties to replace in the package.xml file</value>
   </data>
+  <data name="HelpPackPackageFileName" xml:space="preserve">
+    <value>An explicit file name to give the generated package file</value>
+  </data>
 </root>
