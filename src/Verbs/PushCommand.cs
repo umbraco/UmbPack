@@ -47,9 +47,9 @@ namespace Umbraco.Packager.CI.Verbs
             HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
         public IEnumerable<string> Archive { get; set; }
 
-        [Option('s', "SkipDuplicates", Default = false,
-            HelpText = "HelpPushSkipDuplicates", ResourceType = typeof(HelpTextResource))]
-        public bool SkipDuplicates { get; set; }
+        [Option('d', "AllowDuplicates", Default = false,
+            HelpText = "HelpPushAllowDuplicates", ResourceType = typeof(HelpTextResource))]
+        public bool AllowDuplicates { get; set; }
     }
 
 
@@ -80,7 +80,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             if (packages != null)
             {
-                packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath, options.SkipDuplicates);
+                packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath, options.AllowDuplicates);
             }
 
             await ArchivePackages(options, packageHelper, packages);

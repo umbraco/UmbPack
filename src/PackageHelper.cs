@@ -100,29 +100,28 @@ namespace Umbraco.Packager.CI
             return null;
         }
 
-        public void EnsurePackageDoesntAlreadyExists(JArray packages, string packageFile, bool skipDuplicates = false)
+        public void EnsurePackageDoesntAlreadyExists(JArray packages, string packageFile, bool allowDuplicates = false)
         {
             if (packages == null) return;
 
             var packageFileName = Path.GetFileName(packageFile);
+            var packageNameCount = 0;
 
             foreach (var package in packages)
             {
                 var packageName = package.Value<string>("Name");
+                
                 if (packageName.Equals(packageFileName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (skipDuplicates)
-                    {
-                        WriteWarning(Resources.Push_PackageSkipped, packageFileName);
-                        Environment.Exit(0);
-                    }
-                    else
+                    if (!allowDuplicates)
                     {
                         WriteError(Resources.Push_PackageExists, packageFileName);
-                        Environment.Exit(80); // FILE_EXISTS                
+                        Environment.Exit(80); // FILE_EXISTS     
                     }
+                    packageNameCount++;
                 }
             }
+            WriteWarning(Resources.Push_DuplicateAllowed, packageFileName, packageNameCount);
         }
 
         public async Task ArchivePackages(ApiKeyModel keyParts, IEnumerable<int> ids)

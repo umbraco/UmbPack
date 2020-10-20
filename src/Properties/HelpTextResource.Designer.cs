@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class HelpTextResource {
@@ -142,6 +142,15 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow pushing duplicate package names.
+        /// </summary>
+        public static string HelpPushAllowDuplicates {
+            get {
+                return ResourceManager.GetString("HelpPushAllowDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more wildcard patterns to match against existing package files to be archived.
         /// </summary>
         public static string HelpPushArchive {
@@ -183,15 +192,6 @@ namespace Umbraco.Packager.CI.Properties {
         public static string HelpPushPackage {
             get {
                 return ResourceManager.GetString("HelpPushPackage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ignore duplicate package names.
-        /// </summary>
-        public static string HelpPushSkipDuplicates {
-            get {
-                return ResourceManager.GetString("HelpPushSkipDuplicates", resourceCulture);
             }
         }
         
