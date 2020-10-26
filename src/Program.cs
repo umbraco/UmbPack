@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Umbraco.Packager.CI.Properties;
-using Umbraco.Packager.CI.Verbs;
+using UmbPack.Properties;
+using UmbPack.Verbs;
 
-namespace Umbraco.Packager.CI
+namespace UmbPack
 {
-    // Exit code conventions
-    // https://docs.microsoft.com/en-gb/windows/win32/debug/system-error-codes--0-499-?redirectedfrom=MSDN
-
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
-            var builder = new HostBuilder()
-            .ConfigureServices((hostContext, services) =>
+            var builder = new HostBuilder().ConfigureServices((hostContext, services) =>
             {
+                // TODO Change basic HTTP client into typed client
                 services.AddHttpClient();
                 services.AddTransient<PackageHelper>();
             }).UseConsoleLifetime();
@@ -30,61 +26,48 @@ namespace Umbraco.Packager.CI
             using (var serviceScope = host.Services.CreateScope())
             {
                 var services = serviceScope.ServiceProvider;
-                await InternalMain(args, services.GetRequiredService<PackageHelper>());
-                   
+                var packageHelper = services.GetRequiredService<PackageHelper>();
+
+                using var parser = new Parser(with =>
+                {
+                    with.HelpWriter = null;
+                    with.AutoVersion = false;
+                    with.CaseSensitive = false;
+                });
+
+                var parserResult = parser.ParseArguments<PackOptions, PushOptions, InitOptions>(args);
+
+                return (int)await parserResult.MapResult(
+                    (PackOptions opts) => Task.FromResult(PackCommand.RunAndReturn(opts)),
+                    async (PushOptions opts) => await PushCommand.RunAndReturn(opts, packageHelper),
+                    (InitOptions opts) => Task.FromResult(InitCommand.RunAndReturn(opts)),
+                    errs => Task.FromResult(DisplayHelp(parserResult, errs))
+                );
             }
         }
 
-        private static async Task InternalMain(string[] args, PackageHelper packageHelper)
+        private static ErrorCode DisplayHelp<T>(ParserResult<T> parserResult, IEnumerable<Error> errs)
         {
-
-            // now uses 'verbs' so each verb is a command
-            // 
-            // e.g umbpack init or umbpack push
-            //
-            // these are handled by the Command classes.
-
-            var parser = new Parser(with => {
-                with.HelpWriter = null;
-                // with.HelpWriter = Console.Out;
-                with.AutoVersion = false;
-                with.CaseSensitive = false;
-            } );
-
-            // TODO: could load the verbs by interface or class
-
-            var parserResults = parser.ParseArguments<PackOptions, PushOptions, InitOptions>(args);
-
-            parserResults
-                .WithParsed<PackOptions>(opts => PackCommand.RunAndReturn(opts).Wait())
-                .WithParsed<PushOptions>(opts => PushCommand.RunAndReturn(opts, packageHelper).Wait())
-                .WithParsed<InitOptions>(opts => InitCommand.RunAndReturn(opts))
-                .WithNotParsed(async errs => await DisplayHelp(parserResults, errs));
-        }
-
-        private static async Task DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
-        {
-            var helpText = HelpText.AutoBuild(result, h =>
+            var helpText = HelpText.AutoBuild(parserResult, h =>
             {
                 h.AutoVersion = false;
                 h.AutoHelp = false;
+
                 return h;
             }, e => e, true);
-            
-            // Append header with Ascii Art
-            helpText.Heading = Resources.Ascaii + Environment.NewLine + helpText.Heading;
+
+            // Append header with ASCII art
+            helpText.Heading = Resources.Ascii + Environment.NewLine + helpText.Heading;
             helpText.AddPostOptionsText(Resources.HelpFooter);
             Console.WriteLine(helpText);
 
             // --version or --help
             if (errs.IsVersion() || errs.IsHelp())
             {
-                // 0 is everything is all OK exit code
-                Environment.Exit(0);
+                return ErrorCode.Success;
             }
 
-            // ERROR_INVALID_FUNCTION
-            Environment.Exit(1);
+            return ErrorCode.InvalidFunction;
         }
     }
 }

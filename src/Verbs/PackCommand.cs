@@ -2,75 +2,71 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml.Linq;
-
 using CommandLine;
-using Umbraco.Packager.CI.Extensions;
-using Umbraco.Packager.CI.Properties;
+using UmbPack.Extensions;
+using UmbPack.Properties;
 
-namespace Umbraco.Packager.CI.Verbs
+namespace UmbPack.Verbs
 {
+    /// <summary>
+    /// Command line options for the Pack verb.
+    /// </summary>
     [Verb("pack", HelpText = "HelpPack", ResourceType = typeof(HelpTextResource))]
-    public class PackOptions
+    internal class PackOptions
     {
-        [Value(0, MetaName = "file/folder", Required = true,
-            HelpText = "HelpPackFile", ResourceType = typeof(HelpTextResource))]
+        [Value(0, MetaName = "file/folder", Required = true, HelpText = "HelpPackFile", ResourceType = typeof(HelpTextResource))]
         public string FolderOrFile { get; set; }
 
-        [Option('o', "OutputDirectory",
-            HelpText = "HelpPackOutput", 
-            ResourceType = typeof(HelpTextResource),
-            Default = ".")]
+        [Option('o', "OutputDirectory", HelpText = "HelpPackOutput", ResourceType = typeof(HelpTextResource), Default = ".")]
         public string OutputDirectory { get; set; }
 
-        [Option('v', "Version",
-            HelpText = "HelpPackVersion",
-            ResourceType = typeof(HelpTextResource))]
+        [Option('v', "Version", HelpText = "HelpPackVersion", ResourceType = typeof(HelpTextResource))]
         public string Version { get; set; }
 
-        [Option('p', "Properties",
-            HelpText = "HelpPackProperties",
-            ResourceType = typeof(HelpTextResource))]
+        [Option('p', "Properties", HelpText = "HelpPackProperties", ResourceType = typeof(HelpTextResource))]
         public string Properties { get; set; }
-      
-        [Option('n', "PackageFileName",
-            HelpText = "HelpPackPackageFileName",
-            ResourceType = typeof(HelpTextResource))]
+
+        [Option('n', "PackageFileName", HelpText = "HelpPackPackageFileName", ResourceType = typeof(HelpTextResource))]
         public string PackageFileName { get; set; }
     }
 
-
     /// <summary>
-    ///  Pack command, lets you create a package.zip either from a package.xml or a folder
+    /// Pack command, lets you create a package.zip either from a package.xml or a folder.
     /// </summary>
     /// <remarks>
-    ///    you can mark up the package.xml file with a couple of extra things
-    ///    and when its processed by this command, to make the full version
-    ///    
-    /// Example: 
-    /// <![CDATA[
-    ///     <files>
-    ///         <file path="../path/to/file.dll" orgPath="bin" />
-    ///         <folder path="../path/to/folder/App_Plugins" orgPath="App_Plugins" />
-    ///     </files>
-    /// ]]>
+    /// You can mark up the package.xml file with a couple of extra things and when its processed by this command, to make the full version.
+    /// Example:
     /// 
-    ///  this would copy the file to the bin folder in the package
-    ///  and copy the content of the folder to the App_Plugins folder
-    ///  the structure of the folder beneath this level is also preserved.
+    /// <code>
+    /// <![CDATA[
+    /// <files>
+    ///     <file path="../path/to/file.dll" orgPath="bin" />
+    ///     <folder path="../path/to/folder/App_Plugins" orgPath="App_Plugins" />
+    /// </files>
+    /// ]]>
+    /// </code>
+    /// 
+    /// This would copy the file to the bin folder in the package and copy the content of the folder to the App_Plugins folder. The structure of the folder beneath this level is also preserved.
     /// </remarks>
     internal static class PackCommand
     {
-        public async static Task<int> RunAndReturn(PackOptions options)
+        /// <summary>
+        /// Runs the command and returns the error code.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <returns>
+        /// The error code.
+        /// </returns>
+        public static ErrorCode RunAndReturn(PackOptions options)
         {
-            // make sure the output directory exists
+            // Make sure the output directory exists
             Directory.CreateDirectory(options.OutputDirectory);
 
-            // working dir, is where we build a structure of what the package will do
+            // Working dir, is where we build a structure of what the package will do
             var workingDir = CreateWorkingFolder(options.OutputDirectory, "__umbpack__tmp");
 
-            // buildfolder is the things we zip up.
+            // Build folder is the things we ZIP up
             var buildFolder = CreateWorkingFolder(options.OutputDirectory, "__umbpack__build");
 
             /*
@@ -79,15 +75,16 @@ namespace Umbraco.Packager.CI.Verbs
             Console.WriteLine("Working Folder: {0}", workingDir);
             Console.WriteLine("Build Folder: {0}", buildFolder);
             */
-           
+
             var packageFile = options.FolderOrFile;
             bool isFolder = false;
 
             if (!Path.GetExtension(options.FolderOrFile).Equals(".xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                // a folder - we assume the package.xml is in that folder
+                // A folder - we assume the package.xml is in that folder
                 isFolder = true;
                 packageFile = Path.Combine(options.FolderOrFile, "package.xml");
+
                 Console.WriteLine(Resources.Pack_BuildingFolder, options.FolderOrFile);
             }
             else
@@ -98,22 +95,19 @@ namespace Umbraco.Packager.CI.Verbs
             if (!File.Exists(packageFile))
             {
                 Console.WriteLine(Resources.Pack_MissingXml, packageFile);
-                Environment.Exit(2);
+
+                return ErrorCode.FileNotFound;
             }
 
             Console.WriteLine(Resources.Pack_LoadingFile, packageFile);
 
-            // load the package xml
+            // Load the package XML
             XElement packageXml = null;
-
             if (!string.IsNullOrWhiteSpace(options.Properties))
             {
                 var packageXmlContents = File.ReadAllText(packageFile);
 
-                var props = options.Properties.Split(";", StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Split('='))
-                    .ToDictionary(x => x[0], x => x[1]);
-
+                var props = options.Properties.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Split('=')).ToDictionary(x => x[0], x => x[1]);
                 foreach (var prop in props)
                 {
                     packageXmlContents = packageXmlContents.Replace($"${prop.Key}$", prop.Value);
@@ -128,24 +122,37 @@ namespace Umbraco.Packager.CI.Verbs
 
             Console.WriteLine(Resources.Pack_UpdatingVersion);
 
-            // stamp the package version.
+            // Stamp the package version.
             var version = GetOrSetPackageVersion(packageXml, options.Version);
 
             Console.WriteLine(Resources.Pack_GetPackageName);
 
-            // work out what we are going to call the package
-            var packageFileName = !string.IsNullOrWhiteSpace(options.PackageFileName)
-                ? options.PackageFileName.EnsureEndsWith(".zip")
-                : GetPackageFileName(packageXml, version);
+            // Work out what we are going to call the package
+            string packageFileName;
+            if (!string.IsNullOrWhiteSpace(options.PackageFileName))
+            {
+                packageFileName = options.PackageFileName.EnsureEndsWith(".zip");
+            }
+            else
+            {
+                ErrorCode? errorCode;
+                (packageFileName, errorCode) = GetPackageFileName(packageXml, version);
 
-            // work out what where we are going to output the package to
+                if (errorCode.HasValue)
+                {
+                    return errorCode.Value;
+                }
+            }
+
+            // Work out what where we are going to output the package to
             var packageOutputPath = Path.Combine(options.OutputDirectory, packageFileName);
 
             Console.WriteLine(Resources.Pack_AddPackageFiles);
-            // add any files based on what is already in the package.xml
+
+            // Add any files based on what is already in the package.xml
             AddFilesBasedOnPackageXml(packageXml, workingDir);
 
-            // if the source is a folder, grab all the files from that folder
+            // If the source is a folder, grab all the files from that folder
             if (isFolder) AddFilesFromFolders(options.FolderOrFile, workingDir);
 
             Console.WriteLine(Resources.Pack_BuildPackage);
@@ -154,39 +161,64 @@ namespace Umbraco.Packager.CI.Verbs
 
             CreateZip(buildFolder, packageOutputPath);
 
-            Console.WriteLine(Resources.Pack_Complete);   
+            Console.WriteLine(Resources.Pack_Complete);
             Directory.Delete(buildFolder, true);
 
-            return 0;
+            return ErrorCode.Success;
         }
 
-        private static string CreateWorkingFolder(string path, string subFolder = "", bool clean = true) 
+        /// <summary>
+        /// Creates the working folder.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="subFolder">The sub folder.</param>
+        /// <param name="clean">If set to <c>true</c> cleans the folder.</param>
+        /// <returns>
+        /// The working folder path.
+        /// </returns>
+        private static string CreateWorkingFolder(string path, string subFolder = "", bool clean = true)
         {
             var folder = Path.Combine(path, subFolder);
-            
+
             if (clean && Directory.Exists(folder))
+            {
                 Directory.Delete(folder, true);
+            }
 
             Directory.CreateDirectory(folder);
+
             return folder;
         }
 
-        private static string GetPackageFileName(XElement packageFile, string version)
+        /// <summary>
+        /// Gets the name of the package file.
+        /// </summary>
+        /// <param name="packageFile">The package file.</param>
+        /// <param name="version">The version.</param>
+        /// <returns>
+        /// The name of the package file and/or the error code.
+        /// </returns>
+        private static (string, ErrorCode?) GetPackageFileName(XElement packageFile, string version)
         {
             var nameNode = packageFile.Element("info")?.Element("package")?.Element("name");
             if (nameNode != null)
             {
-                var name = nameNode.Value
-                    .Replace(".", "_")
-                    .Replace(" ", "_");
+                var name = nameNode.Value.Replace(".", "_").Replace(" ", "_");
 
-                return $"{name}_{version}.zip";
+                return ($"{name}_{version}.zip", null);
             }
 
-            Environment.Exit(2);
-            return "";
+            return (null, ErrorCode.FileNotFound);
         }
 
+        /// <summary>
+        /// Gets or sets the package version.
+        /// </summary>
+        /// <param name="packageXml">The package XML.</param>
+        /// <param name="version">The version.</param>
+        /// <returns>
+        /// The version.
+        /// </returns>
         private static string GetOrSetPackageVersion(XElement packageXml, string version)
         {
             if (!string.IsNullOrWhiteSpace(version))
@@ -203,6 +235,7 @@ namespace Umbraco.Packager.CI.Verbs
 
                     versionNode.Value = version;
                 }
+
                 return version;
             }
             else
@@ -211,21 +244,23 @@ namespace Umbraco.Packager.CI.Verbs
             }
         }
 
-
         /// <summary>
-        ///  Adds all the files in one folder (and sub folders) to the package directory.
+        /// Adds all the files in one folder (and sub folders) to the package directory.
         /// </summary>
-        private static void AddFilesFromFolders(string sourceFolder, string dest, string prefix = "")
+        /// <param name="sourceFolder">The source folder.</param>
+        /// <param name="destinationFolder">The destination folder.</param>
+        /// <param name="prefix">The prefix.</param>
+        private static void AddFilesFromFolders(string sourceFolder, string destinationFolder, string prefix = "")
         {
             Console.WriteLine(Resources.Pack_AddingFolder, sourceFolder);
 
-            foreach(var file in Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories))
+            foreach (var file in Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories))
             {
-                var relative = file.Substring(sourceFolder.Length+1);
+                var relative = file.Substring(sourceFolder.Length + 1);
 
-                var destination = Path.Combine(prefix, dest, relative);
+                var destination = Path.Combine(prefix, destinationFolder, relative);
 
-                Console.WriteLine(Resources.Pack_AddingSingle, relative, dest);
+                Console.WriteLine(Resources.Pack_AddingSingle, relative, destinationFolder);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 File.Copy(file, destination);
@@ -233,17 +268,25 @@ namespace Umbraco.Packager.CI.Verbs
         }
 
         /// <summary>
-        ///  adds a single file to the package folder. 
+        /// Adds a single file to the package folder.
         /// </summary>
-        private static void AddFile(string sourceFile, string dest, string prefix = "")
+        /// <param name="sourceFile">The source file.</param>
+        /// <param name="destinationFile">The destination file.</param>
+        /// <param name="prefix">The prefix.</param>
+        private static void AddFile(string sourceFile, string destinationFile, string prefix = "")
         {
-            var destination = Path.Combine(prefix, dest);
-            Console.WriteLine(Resources.Pack_AddingSingle, sourceFile, dest);
+            var destination = Path.Combine(prefix, destinationFile);
+            Console.WriteLine(Resources.Pack_AddingSingle, sourceFile, destinationFile);
 
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             File.Copy(sourceFile, destination);
         }
 
+        /// <summary>
+        /// Adds the files based on package XML.
+        /// </summary>
+        /// <param name="package">The package.</param>
+        /// <param name="tempFolder">The temporary folder.</param>
         private static void AddFilesBasedOnPackageXml(XElement package, string tempFolder)
         {
             var fileNodes = package.Elements("files");
@@ -266,6 +309,13 @@ namespace Umbraco.Packager.CI.Verbs
             }
         }
 
+        /// <summary>
+        /// Gets the path and original path.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <returns>
+        /// The path and original path.
+        /// </returns>
         private static (string path, string orgPath) GetPathAndOrgPath(XElement node)
         {
             var orgPath = node.Attribute("orgPath")?.Value;
@@ -280,6 +330,12 @@ namespace Umbraco.Packager.CI.Verbs
             return (path, orgPath);
         }
 
+        /// <summary>
+        /// Builds the package folder.
+        /// </summary>
+        /// <param name="package">The package.</param>
+        /// <param name="sourceFolder">The source folder.</param>
+        /// <param name="flatFolder">The flattended folder.</param>
         private static void BuildPackageFolder(XElement package, string sourceFolder, string flatFolder)
         {
             var filesNode = package.Element("files");
@@ -319,6 +375,12 @@ namespace Umbraco.Packager.CI.Verbs
 
             package.Save(Path.Combine(flatFolder, "package.xml"));
         }
+
+        /// <summary>
+        /// Creates the ZIP file.
+        /// </summary>
+        /// <param name="folder">The folder.</param>
+        /// <param name="zipFileName">Name of the ZIP file.</param>
         private static void CreateZip(string folder, string zipFileName)
         {
             if (Directory.Exists(folder))
@@ -335,6 +397,5 @@ namespace Umbraco.Packager.CI.Verbs
                 Console.WriteLine(Resources.Pack_DirectoryMissing, folder);
             }
         }
-
     }
 }

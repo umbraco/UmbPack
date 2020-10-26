@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties {
+namespace UmbPack.Properties {
     using System;
     
     
@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -73,9 +73,9 @@ namespace Umbraco.Packager.CI.Properties {
         ///------------------------------------------------------------------
         ///    .
         /// </summary>
-        internal static string Ascaii {
+        internal static string Ascii {
             get {
-                return ResourceManager.GetString("Ascaii", resourceCulture);
+                return ResourceManager.GetString("Ascii", resourceCulture);
             }
         }
         
@@ -89,7 +89,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to For more information see ?? .
+        ///   Looks up a localized string similar to For more information see https://our.umbraco.com/documentation/Extending/Packages/UmbPack .
         /// </summary>
         internal static string HelpFooter {
             get {
@@ -145,7 +145,7 @@ namespace Umbraco.Packager.CI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to This utility will walk you through creating a package.xml file.
         ///It only covers the most common items, and tries to guess sensible defaults.
-        ///      
+        ///
         ///See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/ for more info on what the fields mean..
         /// </summary>
         internal static string Init_Header {
@@ -182,7 +182,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Package Name.
+        ///   Looks up a localized string similar to Package name.
         /// </summary>
         internal static string Init_PackageName {
             get {
@@ -200,7 +200,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Umbraco Version.
+        ///   Looks up a localized string similar to Umbraco version.
         /// </summary>
         internal static string Init_UmbracoVersion {
             get {
@@ -209,7 +209,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Url.
+        ///   Looks up a localized string similar to URL.
         /// </summary>
         internal static string Init_Url {
             get {
@@ -236,7 +236,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to     - Adding Folder: {0}.
+        ///   Looks up a localized string similar to - Adding folder: {0}.
         /// </summary>
         internal static string Pack_AddingFolder {
             get {
@@ -245,7 +245,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to     - Adding: {0} to {1}.
+        ///   Looks up a localized string similar to - Adding: {0} to {1}.
         /// </summary>
         internal static string Pack_AddingSingle {
             get {
@@ -254,7 +254,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Adding files to package.
+        ///   Looks up a localized string similar to - Adding files to package.
         /// </summary>
         internal static string Pack_AddPackageFiles {
             get {
@@ -281,7 +281,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Building package.
+        ///   Looks up a localized string similar to - Building package.
         /// </summary>
         internal static string Pack_BuildPackage {
             get {
@@ -299,7 +299,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Build Directory {0} doesn&apos;t exist.
+        ///   Looks up a localized string similar to Build directory {0} doesn&apos;t exist.
         /// </summary>
         internal static string Pack_DirectoryMissing {
             get {
@@ -308,7 +308,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Getting Package Name.
+        ///   Looks up a localized string similar to - Getting package name.
         /// </summary>
         internal static string Pack_GetPackageName {
             get {
@@ -317,7 +317,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Loading Package File: {0}.
+        ///   Looks up a localized string similar to - Loading package file: {0}.
         /// </summary>
         internal static string Pack_LoadingFile {
             get {
@@ -335,7 +335,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Saving Package to {0}.
+        ///   Looks up a localized string similar to - Saving package to {0}.
         /// </summary>
         internal static string Pack_SavingPackage {
             get {
@@ -344,7 +344,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  - Updating package version.
+        ///   Looks up a localized string similar to - Updating package version.
         /// </summary>
         internal static string Pack_UpdatingVersion {
             get {
@@ -353,7 +353,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Api Key is invalid.
+        ///   Looks up a localized string similar to API key is invalid.
         /// </summary>
         internal static string Push_ApiKeyInvalid {
             get {
@@ -398,7 +398,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot find file {0}.
+        ///   Looks up a localized string similar to Can&apos;t find file {0}.
         /// </summary>
         internal static string Push_MissingFile {
             get {
@@ -434,7 +434,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Uploading {0} to our.umbraco.com ....
+        ///   Looks up a localized string similar to Uploading {0} to our.umbraco.com....
         /// </summary>
         internal static string Push_Uploading {
             get {

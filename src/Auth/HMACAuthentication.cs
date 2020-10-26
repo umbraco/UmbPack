@@ -1,23 +1,41 @@
 using System;
 using System.Globalization;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
-using Umbraco.Packager.CI.Extensions;
+using UmbPack.Extensions;
 
-namespace Umbraco.Packager.CI.Auth
+namespace UmbPack.Auth
 {
     /// <summary>
-    /// HMAC Authentication utilities
+    /// HMAC authentication utilities.
     /// </summary>
-    public static class HMACAuthentication
+    internal static class HMACAuthentication
     {
+        /// <summary>
+        /// Gets the signature.
+        /// </summary>
+        /// <param name="requestUri">The request URI.</param>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <param name="nonce">The nonce.</param>
+        /// <param name="secret">The secret.</param>
+        /// <returns>
+        /// The signature.
+        /// </returns>
         public static string GetSignature(string requestUri, DateTime timestamp, Guid nonce, string secret)
         {
             return GetSignature(requestUri, timestamp.ToUnixTimestamp().ToString(CultureInfo.InvariantCulture), nonce.ToString(), secret);
         }
 
+        /// <summary>
+        /// Gets the signature.
+        /// </summary>
+        /// <param name="requestUri">The request URI.</param>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <param name="nonce">The nonce.</param>
+        /// <param name="secret">The secret.</param>
+        /// <returns>
+        /// The signature.
+        /// </returns>
         private static string GetSignature(string requestUri, string timestamp, string nonce, string secret)
         {
             var secretBytes = Encoding.UTF8.GetBytes(secret);
@@ -33,18 +51,20 @@ namespace Umbraco.Packager.CI.Auth
         }
 
         /// <summary>
-        /// Returns the token authorization header value as a base64 encoded string
+        /// Returns the token authorization header value as a BASE64 encoded string.
         /// </summary>
-        /// <param name="signature"></param>
-        /// <param name="nonce"></param>
-        /// <param name="timestamp"></param>
-        /// <returns></returns>
+        /// <param name="signature">The signature.</param>
+        /// <param name="nonce">The nonce.</param>
+        /// <param name="timestamp">The timestamp.</param>
+        /// <returns>
+        /// The token authorization header.
+        /// </returns>
         public static string GenerateAuthorizationHeader(string signature, Guid nonce, DateTime timestamp)
         {
-            return
-                Convert.ToBase64String(
-                    Encoding.UTF8.GetBytes(
-                        $"{signature}:{nonce}:{timestamp.ToUnixTimestamp().ToString(CultureInfo.InvariantCulture)}"));
+            var headerString = $"{signature}:{nonce}:{timestamp.ToUnixTimestamp().ToString(CultureInfo.InvariantCulture)}";
+            var headerBytes = Encoding.UTF8.GetBytes(headerString);
+
+            return Convert.ToBase64String(headerBytes);
         }
     }
 }

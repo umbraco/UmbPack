@@ -8,75 +8,96 @@ using System.Net.Http.Handlers;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
 using CommandLine;
-
 using Newtonsoft.Json;
-using Umbraco.Packager.CI.Auth;
-using Umbraco.Packager.CI.Properties;
+using UmbPack.Properties;
 
-namespace Umbraco.Packager.CI.Verbs
+namespace UmbPack.Verbs
 {
     /// <summary>
-    ///  Options for the Push verb
+    /// Command line options for the Push verb.
     /// </summary>
     [Verb("push", HelpText = "HelpPush", ResourceType = typeof(HelpTextResource))]
-    public class PushOptions
+    internal class PushOptions
     {
-        [Value(0, MetaName = "package.zip", Required = true,
-            HelpText = "HelpPushPackage", ResourceType = typeof(HelpTextResource))]
+        [Value(0, MetaName = "package.zip", Required = true, HelpText = "HelpPushPackage", ResourceType = typeof(HelpTextResource))]
         public string Package { get; set; }
 
         [Option('k', "Key", HelpText = "HelpPushKey", ResourceType = typeof(HelpTextResource))]
         public string ApiKey { get; set; }
 
-        [Option('c', "Current", Default = "true", 
-            HelpText = "HelpPushCurrent", ResourceType = typeof(HelpTextResource))]
+        [Option('c', "Current", Default = "true", HelpText = "HelpPushCurrent", ResourceType = typeof(HelpTextResource))]
         public string Current { get; set; }
 
-        [Option("DotNetVersion", Default = "4.7.2", 
-            HelpText = "HelpPushDotNet", ResourceType = typeof(HelpTextResource))]
+        [Option("DotNetVersion", Default = "4.7.2", HelpText = "HelpPushDotNet", ResourceType = typeof(HelpTextResource))]
         public string DotNetVersion { get; set; }
 
-        [Option('w', "WorksWith", Default = "v850", 
-            HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
+        [Option('w', "WorksWith", Default = "v850", HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
 
-        [Option('a', "Archive", Separator = ' ', 
-            HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
+        [Option('a', "Archive", Separator = ' ', HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
         public IEnumerable<string> Archive { get; set; }
     }
 
-
+    /// <summary>
+    /// Push command, lets you upload a package to Our.
+    /// </summary>
     internal static class PushCommand
     {
-        public static async Task<int> RunAndReturn(PushOptions options, PackageHelper packageHelper)
+        /// <summary>
+        /// Runs the command and returns the error code.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="packageHelper">The package helper.</param>
+        /// <returns>
+        /// The error code.
+        /// </returns>
+        public static async Task<ErrorCode> RunAndReturn(PushOptions options, PackageHelper packageHelper)
         {
             // --package=MyFile.zip
             // --package=./MyFile.zip
             // --package=../MyParentFolder.zip
+
             var filePath = options.Package;
             var apiKey = options.ApiKey;
 
             var keyParts = packageHelper.SplitKey(apiKey);
 
             // Check we can find the file
-            packageHelper.EnsurePackageExists(filePath);
+            if (packageHelper.EnsurePackageExists(filePath) is ErrorCode ensurePackageExistsErrorCode)
+            {
+                return ensurePackageExistsErrorCode;
+            }
 
-            // Check File is a ZIP          
-            packageHelper.EnsureIsZip(filePath);
+            // Check file is a ZIP
+            if (packageHelper.EnsureIsZip(filePath) is ErrorCode ensureIsZipErrorCode)
+            {
+                return ensureIsZipErrorCode;
+            }
 
             // Check zip contains valid package.xml
-            packageHelper.EnsureContainsPackageXml(filePath);
+            if (packageHelper.EnsureContainsPackageXml(filePath) is ErrorCode ensureContainsPackageXmlErrorCode)
+            {
+                return ensureContainsPackageXmlErrorCode;
+            }
 
             // gets a package list from our.umbraco
             // if the api key is invalid we will also find out here.
-            var packages = await packageHelper.GetPackageList(keyParts);
-            var currentPackageId = await packageHelper.GetCurrentPackageFileId(keyParts);
+            var (packages, getPackageListErrorCode) = await packageHelper.GetPackageList(keyParts);
+            if (getPackageListErrorCode.HasValue)
+            {
+                return getPackageListErrorCode.Value;
+            }
 
-            if (packages != null)
-            { 
-                packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath);
+            var (currentPackageId, getCurrentPackageFileIdErrorCode) = await packageHelper.GetCurrentPackageFileId(keyParts);
+            if (getCurrentPackageFileIdErrorCode.HasValue)
+            {
+                return getCurrentPackageFileIdErrorCode.Value;
+            }
+
+            if (packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath) is ErrorCode ensurePackageDoesntAlreadyExistsErrorCode)
+            {
+                return ensurePackageDoesntAlreadyExistsErrorCode;
             }
 
             // Archive packages
@@ -113,21 +134,41 @@ namespace Umbraco.Packager.CI.Verbs
 
             if (packagesToArchive.Count > 0)
             {
-                await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct());
+                if (await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct()) is ErrorCode archivePackagesErrorCode)
+                {
+                    return archivePackagesErrorCode;
+                }
+
                 Console.WriteLine($"Archived {packagesToArchive.Count} packages matching the archive pattern.");
             }
 
             // Parse package.xml before upload to print out info
             // and to use for comparison on what is already uploaded
-            var packageInfo = Parse.PackageXml(filePath);
+            var (packageInfo, packageXmlErrorCode) = packageHelper.PackageXml(filePath);
+            if (packageXmlErrorCode.HasValue)
+            {
+                return packageXmlErrorCode.Value;
+            }
 
             // OK all checks passed - time to upload it
-            await UploadPackage(options, packageHelper, packageInfo);
+            if (await UploadPackage(options, packageHelper, packageInfo) is ErrorCode uploadPackageErrorCode)
+            {
+                return uploadPackageErrorCode;
+            }
 
-            return 0;
+            return ErrorCode.Success;
         }
 
-        private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper, PackageInfo packageInfo)
+        /// <summary>
+        /// Uploads the package.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="packageHelper">The package helper.</param>
+        /// <param name="packageInfo">The package information.</param>
+        /// <returns>
+        /// The error code.
+        /// </returns>
+        private static async Task<ErrorCode?> UploadPackage(PushOptions options, PackageHelper packageHelper, PackageInfo packageInfo)
         {
             try
             {
@@ -168,7 +209,8 @@ namespace Umbraco.Packager.CI.Verbs
                     if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         packageHelper.WriteError(Resources.Push_ApiKeyInvalid);
-                        Environment.Exit(5); // ERROR_ACCESS_DENIED
+
+                        return ErrorCode.AccessDenied;
                     }
                     else if (httpResponse.IsSuccessStatusCode)
                     {
@@ -184,28 +226,35 @@ namespace Umbraco.Packager.CI.Verbs
             {
                 // Could get network error or our.umb down
                 Console.WriteLine(Resources.Error, ex);
+
                 throw;
             }
+
+            return null;
         }
 
-
         /// <summary>
-        ///  returns the version compatibility string for uploading the package
+        /// Returns the version compatibility string for uploading the package.
         /// </summary>
-        /// <param name="worksWithString"></param>
-        /// <returns></returns>
+        /// <param name="worksWithString">The 'works with' string.</param>
+        /// <returns>
+        /// The version compatibility string.
+        /// </returns>
         private static StringContent GetVersionCompatibility(string worksWithString)
         {
-            // TODO: Workout how we can get a latest version from our ? 
-            // TODO: Maybe accept wild cards (8.* -> 8.5.0,8.4.0,8.3.0)
-            // TODO: Work like nuget e.g '> 8.4.0' 
-            var versions = worksWithString
-                                .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                                .Select(x => new UmbracoVersion() { Version = x });
+            // TODO Workout how we can get a latest version from our? Maybe accept wild cards (8.* -> 8.5.0,8.4.0,8.3.0) or work like nuget e.g '> 8.4.0'?
+            var versions = worksWithString.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(x => new UmbracoVersion() { Version = x });
 
             return new StringContent(JsonConvert.SerializeObject(versions));
         }
 
+        /// <summary>
+        /// Parses the current flag.
+        /// </summary>
+        /// <param name="current">The current flag.</param>
+        /// <returns>
+        /// The parsed current flag.
+        /// </returns>
         private static string ParseCurrentFlag(string current)
         {
             if (bool.TryParse(current, out bool result))
@@ -217,10 +266,19 @@ namespace Umbraco.Packager.CI.Verbs
         }
 
         /// <summary>
-        ///  taken from the source of our.umbraco.com
+        /// Represents an Umbraco version.
         /// </summary>
+        /// <remarks>
+        /// Taken from the source of our.umbraco.com.
+        /// </remarks>
         private class UmbracoVersion
         {
+            /// <summary>
+            /// Gets or sets the version.
+            /// </summary>
+            /// <value>
+            /// The version.
+            /// </value>
             public string Version { get; set; }
 
             // We don't need to supply name. but it is in the orginal model.
