@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Ascaii" xml:space="preserve">
+  <data name="Ascii" xml:space="preserve">
     <value>
                         888
                         888
@@ -154,7 +154,7 @@ Y88   88Y 888  888  888 888 d88P 888    888  888 Y88b.    Y88..88P
   <data name="Init.Header" xml:space="preserve">
     <value>This utility will walk you through creating a package.xml file.
 It only covers the most common items, and tries to guess sensible defaults.
-      
+
 See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/ for more info on what the fields mean.</value>
   </data>
   <data name="Init.InvalidVersion" xml:space="preserve">
@@ -167,16 +167,16 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
     <value>The location '{0}' where you want to put the package file doesn't exist.</value>
   </data>
   <data name="Init.PackageName" xml:space="preserve">
-    <value>Package Name</value>
+    <value>Package name</value>
   </data>
   <data name="Init.Prompt" xml:space="preserve">
     <value>Is this OK?</value>
   </data>
   <data name="Init.UmbracoVersion" xml:space="preserve">
-    <value>Umbraco Version</value>
+    <value>Umbraco version</value>
   </data>
   <data name="Init.Url" xml:space="preserve">
-    <value>Url</value>
+    <value>URL</value>
   </data>
   <data name="Init.Version" xml:space="preserve">
     <value>Version</value>
@@ -185,13 +185,13 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
     <value>Website</value>
   </data>
   <data name="Pack.AddingFolder" xml:space="preserve">
-    <value>    - Adding Folder: {0}</value>
+    <value>- Adding folder: {0}</value>
   </data>
   <data name="Pack.AddingSingle" xml:space="preserve">
-    <value>    - Adding: {0} to {1}</value>
+    <value>- Adding: {0} to {1}</value>
   </data>
   <data name="Pack.AddPackageFiles" xml:space="preserve">
-    <value> - Adding files to package</value>
+    <value>- Adding files to package</value>
   </data>
   <data name="Pack.BuildingFile" xml:space="preserve">
     <value>Building package from package.xml</value>
@@ -200,31 +200,31 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
     <value>Building package from folder: {0}</value>
   </data>
   <data name="Pack.BuildPackage" xml:space="preserve">
-    <value> - Building package</value>
+    <value>- Building package</value>
   </data>
   <data name="Pack.Complete" xml:space="preserve">
     <value>Complete</value>
   </data>
   <data name="Pack.DirectoryMissing" xml:space="preserve">
-    <value>Build Directory {0} doesn't exist</value>
+    <value>Build directory {0} doesn't exist</value>
   </data>
   <data name="Pack.GetPackageName" xml:space="preserve">
-    <value> - Getting Package Name</value>
+    <value>- Getting package name</value>
   </data>
   <data name="Pack.LoadingFile" xml:space="preserve">
-    <value> - Loading Package File: {0}</value>
+    <value>- Loading package file: {0}</value>
   </data>
   <data name="Pack.MissingXml" xml:space="preserve">
     <value>Unable to locate the package.xml file {0}</value>
   </data>
   <data name="Pack.SavingPackage" xml:space="preserve">
-    <value> - Saving Package to {0}</value>
+    <value>- Saving package to {0}</value>
   </data>
   <data name="Pack.UpdatingVersion" xml:space="preserve">
-    <value> - Updating package version</value>
+    <value>- Updating package version</value>
   </data>
   <data name="Push.ApiKeyInvalid" xml:space="preserve">
-    <value>Api Key is invalid</value>
+    <value>API key is invalid</value>
   </data>
   <data name="Push.Complete" xml:space="preserve">
     <value>The package '{0}' was successfully uploaded to our.umbraco.com</value>
@@ -239,7 +239,7 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
     <value>Invalid package.xml</value>
   </data>
   <data name="Push.MissingFile" xml:space="preserve">
-    <value>Cannot find file {0}</value>
+    <value>Can't find file {0}</value>
   </data>
   <data name="Push.MissingPackageNode" xml:space="preserve">
     <value>Unable to find //umbPackage/info/package in XML</value>
@@ -251,6 +251,6 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
     <value>A package file named '{0}' already exists for this package</value>
   </data>
   <data name="Push.Uploading" xml:space="preserve">
-    <value>Uploading {0} to our.umbraco.com ...</value>
+    <value>Uploading {0} to our.umbraco.com...</value>
   </data>
 </root>

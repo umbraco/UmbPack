@@ -1,12 +1,22 @@
 using System;
 
-namespace Umbraco.Packager.CI.Extensions
+namespace UmbPack.Extensions
 {
-    public static class UriExtensions
+    /// <summary>
+    /// Extension methods for <see cref="Uri" />.
+    /// </summary>
+    internal static class UriExtensions
     {
-        internal static string CleanPathAndQuery(this Uri uri)
+        /// <summary>
+        /// Cleans the path and query.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <returns>
+        /// The cleaned path and query.
+        /// </returns>
+        public static string CleanPathAndQuery(this Uri uri)
         {
-            //sometimes the request path may have double slashes so make sure to normalize this
+            // Sometimes the request path may have double slashes, so make sure to normalize this
             return uri.PathAndQuery.Replace("//", "/");
         }
     }

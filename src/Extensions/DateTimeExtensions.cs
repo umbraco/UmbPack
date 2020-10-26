@@ -1,17 +1,25 @@
 using System;
 
-namespace Umbraco.Packager.CI.Extensions
+namespace UmbPack.Extensions
 {
-    public static class DateTimeExtensions
+    /// <summary>
+    /// Extension methods for <see cref="DateTime" />.
+    /// </summary>
+    internal static class DateTimeExtensions
     {
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+
         /// <summary>
-        /// Gets Unix Timestamp from DateTime object
+        /// Converts the <see cref="DateTime" /> to a Unix timestamp.
         /// </summary>
-        /// <param name="dateTime">The DateTime object</param>
+        /// <param name="dateTime">The date time.</param>
+        /// <returns>
+        /// The Unix timestamp.
+        /// </returns>
         public static double ToUnixTimestamp(this DateTime dateTime)
         {
-            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
-                    new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+            // TODO Should the return type be converted to long?
+            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) - epoch).TotalSeconds;
         }
     }
 }

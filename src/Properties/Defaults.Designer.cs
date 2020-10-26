@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties {
+namespace UmbPack.Properties {
     using System;
     
     

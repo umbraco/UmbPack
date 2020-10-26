@@ -8,8 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties
-{
+namespace UmbPack.Properties {
     using System;
     
     
@@ -125,6 +124,15 @@ namespace Umbraco.Packager.CI.Properties
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Properties to replace in the package.xml file.
+        /// </summary>
+        public static string HelpPackProperties {
+            get {
+                return ResourceManager.GetString("HelpPackProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Override the version defined in the package.xml file.
         /// </summary>
         public static string HelpPackVersion {
@@ -170,7 +178,7 @@ namespace Umbraco.Packager.CI.Properties
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Api Key to use .
+        ///   Looks up a localized string similar to API key to use .
         /// </summary>
         public static string HelpPushKey {
             get {
@@ -193,15 +201,6 @@ namespace Umbraco.Packager.CI.Properties
         public static string HelpPushWorks {
             get {
                 return ResourceManager.GetString("HelpPushWorks", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   List of properties to replace in the package.xml
-        /// </summary>
-        public static string HelpPackProperties {
-            get {
-                return ResourceManager.GetString("HelpPackProperties", resourceCulture);
             }
         }
     }
