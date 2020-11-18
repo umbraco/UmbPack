@@ -1,3 +1,5 @@
+[![NuGet release](https://img.shields.io/nuget/v/Umbraco.Tools.Packages.svg)](https://www.nuget.org/packages/Umbraco.Tools.Packages/)
+
 # UmbPack
 
 UmbPack is a CLI tool to use in CI/CD to upload Umbraco .zip packages to the [our.umbraco.com package repository](https://our.umbraco.com/packages/).
