@@ -34,7 +34,7 @@ jobs:
         run: dotnet pack ./src/ 
               --configuration Release 
               -p:Version=${{ steps.get_version.outputs.VERSION }} 
-              -p:PackageId=Test.Tools.Packages
+              -p:PackageId=Umbraco.Tools.Packages
 
       - name: Push package to NuGet
         run: dotnet nuget push **/*.nupkg
