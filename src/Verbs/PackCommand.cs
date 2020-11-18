@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using CommandLine;
-
+using Umbraco.Packager.CI.Extensions;
 using Umbraco.Packager.CI.Properties;
 
 namespace Umbraco.Packager.CI.Verbs
@@ -27,6 +28,16 @@ namespace Umbraco.Packager.CI.Verbs
             HelpText = "HelpPackVersion",
             ResourceType = typeof(HelpTextResource))]
         public string Version { get; set; }
+
+        [Option('p', "Properties",
+            HelpText = "HelpPackProperties",
+            ResourceType = typeof(HelpTextResource))]
+        public string Properties { get; set; }
+      
+        [Option('n', "PackageFileName",
+            HelpText = "HelpPackPackageFileName",
+            ResourceType = typeof(HelpTextResource))]
+        public string PackageFileName { get; set; }
     }
 
 
@@ -93,7 +104,27 @@ namespace Umbraco.Packager.CI.Verbs
             Console.WriteLine(Resources.Pack_LoadingFile, packageFile);
 
             // load the package xml
-            var packageXml = XElement.Load(packageFile);
+            XElement packageXml = null;
+
+            if (!string.IsNullOrWhiteSpace(options.Properties))
+            {
+                var packageXmlContents = File.ReadAllText(packageFile);
+
+                var props = options.Properties.Split(";", StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Split('='))
+                    .ToDictionary(x => x[0], x => x[1]);
+
+                foreach (var prop in props)
+                {
+                    packageXmlContents = packageXmlContents.Replace($"${prop.Key}$", prop.Value);
+                }
+
+                packageXml = XElement.Parse(packageXmlContents);
+            }
+            else
+            {
+                packageXml = XElement.Load(packageFile);
+            }
 
             Console.WriteLine(Resources.Pack_UpdatingVersion);
 
@@ -101,8 +132,14 @@ namespace Umbraco.Packager.CI.Verbs
             var version = GetOrSetPackageVersion(packageXml, options.Version);
 
             Console.WriteLine(Resources.Pack_GetPackageName);
+
             // work out what we are going to call the package
-            var packageFileName = GetPackageFileName(options.OutputDirectory, packageXml, version);
+            var packageFileName = !string.IsNullOrWhiteSpace(options.PackageFileName)
+                ? options.PackageFileName.EnsureEndsWith(".zip")
+                : GetPackageFileName(packageXml, version);
+
+            // work out what where we are going to output the package to
+            var packageOutputPath = Path.Combine(options.OutputDirectory, packageFileName);
 
             Console.WriteLine(Resources.Pack_AddPackageFiles);
             // add any files based on what is already in the package.xml
@@ -115,7 +152,7 @@ namespace Umbraco.Packager.CI.Verbs
             BuildPackageFolder(packageXml, workingDir, buildFolder);
             Directory.Delete(workingDir, true);
 
-            CreateZip(buildFolder, packageFileName);
+            CreateZip(buildFolder, packageOutputPath);
 
             Console.WriteLine(Resources.Pack_Complete);   
             Directory.Delete(buildFolder, true);
@@ -134,9 +171,8 @@ namespace Umbraco.Packager.CI.Verbs
             return folder;
         }
 
-        private static string GetPackageFileName(string folder, XElement packageFile, string version)
+        private static string GetPackageFileName(XElement packageFile, string version)
         {
-
             var nameNode = packageFile.Element("info")?.Element("package")?.Element("name");
             if (nameNode != null)
             {
@@ -144,7 +180,7 @@ namespace Umbraco.Packager.CI.Verbs
                     .Replace(".", "_")
                     .Replace(" ", "_");
 
-                return Path.Combine(folder, $"{name}_{version}.zip");
+                return $"{name}_{version}.zip";
             }
 
             Environment.Exit(2);

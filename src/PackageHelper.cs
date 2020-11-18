@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -113,6 +114,53 @@ namespace Umbraco.Packager.CI
                     WriteError(Resources.Push_PackageExists, packageFileName);
                     Environment.Exit(80); // FILE_EXISTS
                 }
+            }
+        }
+
+        public async Task ArchivePackages(ApiKeyModel keyParts, IEnumerable<int> ids)
+        {
+            var url = "Umbraco/Api/ProjectUpload/ArchiveProjectFiles";
+            try
+            {
+                using (var httpClient = GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
+                {
+                    var httpResponse = await httpClient.PostAsJsonAsync(url, ids);
+
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        WriteError(Resources.Push_ApiKeyInvalid);
+                        Environment.Exit(5); // ERROR_ACCESS_DENIED
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw ex;
+            }
+        }
+        
+        public async Task<string> GetCurrentPackageFileId(ApiKeyModel keyParts)
+        {
+            var url = "Umbraco/Api/ProjectUpload/GetCurrentPackageFileId";
+            try
+            {
+                using (var httpClient = GetClientBase(url, keyParts.Token, keyParts.MemberId, keyParts.ProjectId))
+                {
+                    var httpResponse = await httpClient.GetAsync(url);
+
+                    if (httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        WriteError(Resources.Push_ApiKeyInvalid);
+                        Environment.Exit(5); // ERROR_ACCESS_DENIED
+                    }
+
+                    var apiResponse = await httpResponse.Content.ReadAsStringAsync();
+                    return apiResponse;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw ex;
             }
         }
 

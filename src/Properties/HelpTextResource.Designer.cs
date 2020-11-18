@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class HelpTextResource {
@@ -39,7 +39,7 @@ namespace Umbraco.Packager.CI.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UmbPack.Properties.HelpTextResource", typeof(HelpTextResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Umbraco.Packager.CI.Properties.HelpTextResource", typeof(HelpTextResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,11 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Initializes a new package.xml file from provided defaults.
+        ///   Looks up a localized string similar to Initializes a new package.xml file from provided defaults
+        ///
+        ///Example usage:
+        ///- umbpack init
+        ///- umbpack init folder/subfolder.
         /// </summary>
         public static string HelpInit {
             get {
@@ -70,7 +74,8 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Folder to save package.xml in (default current folder).
+        ///   Looks up a localized string similar to Folder to save package.xml in (default current folder)
+        ///The folder should exist prior to running the command.
         /// </summary>
         public static string HelpInitFolder {
             get {
@@ -115,6 +120,24 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An explicit file name to give the generated package file.
+        /// </summary>
+        public static string HelpPackPackageFileName {
+            get {
+                return ResourceManager.GetString("HelpPackPackageFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties to replace in the package.xml file.
+        /// </summary>
+        public static string HelpPackProperties {
+            get {
+                return ResourceManager.GetString("HelpPackProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Override the version defined in the package.xml file.
         /// </summary>
         public static string HelpPackVersion {
@@ -129,6 +152,24 @@ namespace Umbraco.Packager.CI.Properties {
         public static string HelpPush {
             get {
                 return ResourceManager.GetString("HelpPush", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One or more wildcard patterns to match against existing package files to be archived.
+        /// </summary>
+        public static string HelpPushArchive {
+            get {
+                return ResourceManager.GetString("HelpPushArchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make this package the current package file.
+        /// </summary>
+        public static string HelpPushCurrent {
+            get {
+                return ResourceManager.GetString("HelpPushCurrent", resourceCulture);
             }
         }
         
@@ -156,15 +197,6 @@ namespace Umbraco.Packager.CI.Properties {
         public static string HelpPushPackage {
             get {
                 return ResourceManager.GetString("HelpPushPackage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Make this package the current package file.
-        /// </summary>
-        public static string HelpPushPublish {
-            get {
-                return ResourceManager.GetString("HelpPushPublish", resourceCulture);
             }
         }
         

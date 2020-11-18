@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -72,6 +73,8 @@ namespace Umbraco.Packager.CI.Verbs
 
             setup.Licence = GetUserInput(Resources.Init_Licence, Defaults.Init_Licence);
 
+            setup.Contributors = GetUserInput(Resources.Init_Contributors, null);
+
             // play it back for confirmation
             Console.WriteLine();
             Console.WriteLine(Resources.Init_Confirm, packageFile);
@@ -119,13 +122,25 @@ namespace Umbraco.Packager.CI.Verbs
             package.Add(new XElement("requirements",
                 new XAttribute("type", "strict"),
                 new XElement("major", options.UmbracoVersion.Major),
-                new XElement("major", options.UmbracoVersion.Minor),
-                new XElement("major", options.UmbracoVersion.Patch)));
+                new XElement("minor", options.UmbracoVersion.Minor),
+                new XElement("patch", options.UmbracoVersion.Patch)));
             info.Add(package);
 
             info.Add(new XElement("author",
                         new XElement("name", options.Author),
                         new XElement("website", options.Website)));
+
+            var contributors = options.Contributors?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                   .Where(x => !string.IsNullOrWhiteSpace(x))
+                   .Select(s => s.Trim())
+                   .ToArray();
+
+            if (contributors?.Length > 0)
+            {
+                info.Add(new XElement("contributors", 
+                    contributors.Select(c => new XElement("contributor", c))
+                ));
+            }
 
             info.Add(new XElement("readme",
                 new XCData(options.Description)));
@@ -144,7 +159,6 @@ namespace Umbraco.Packager.CI.Verbs
             node.Add(new XElement("DataTypes"));
 
             return node;
-
         }
 
         /// <summary>
@@ -250,7 +264,7 @@ namespace Umbraco.Packager.CI.Verbs
             public string Author { get; set; }
             public string Website { get; set; }
             public string Licence { get; set; }
-
+            public string Contributors { get; set; }
             public SemVersion UmbracoVersion { get; set; }
             public string Description { get; set; }
         }

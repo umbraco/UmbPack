@@ -12,5 +12,28 @@ namespace Umbraco.Packager.CI.Extensions
         {
             return str.ToString((IFormatProvider) CultureInfo.InvariantCulture);
         }
+
+        /// <summary>
+        /// Ensures an input string starts with the supplied value
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="toStartWith"></param>
+        /// <returns></returns>
+        public static string EnsureStartsWith(this string input, string toStartWith)
+        {
+            return input.StartsWith(toStartWith) ? input : toStartWith + input;
+        }
+
+        /// <summary>
+        /// Ensures an input string ends with the supplied value
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="toEndWith"></param>
+        /// <returns></returns>
+        public static string EnsureEndsWith(this string input, string toEndWith)
+        {
+            return input.EndsWith(toEndWith) ? input : input + toEndWith;
+        }
+
     }
 }

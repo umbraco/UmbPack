@@ -125,6 +125,15 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contributors.
+        /// </summary>
+        internal static string Init_Contributors {
+            get {
+                return ResourceManager.GetString("Init.Contributors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         internal static string Init_Description {

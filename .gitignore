@@ -3,3 +3,4 @@
 obj/
 bin/
 src/nupkg/
+*.user

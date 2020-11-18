@@ -118,10 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="HelpInit" xml:space="preserve">
-    <value>Initializes a new package.xml file from provided defaults</value>
+    <value>Initializes a new package.xml file from provided defaults
+
+Example usage:
+- umbpack init
+- umbpack init folder/subfolder</value>
   </data>
   <data name="HelpInitFolder" xml:space="preserve">
-    <value>Folder to save package.xml in (default current folder)</value>
+    <value>Folder to save package.xml in (default current folder)
+The folder should exist prior to running the command</value>
   </data>
   <data name="HelpInitNuspec" xml:space="preserve">
     <value>Use nuspec file as a starting point for the package.xml file</value>
@@ -141,6 +146,12 @@
   <data name="HelpPush" xml:space="preserve">
     <value>Push an Umbraco package to our.umbraco.com</value>
   </data>
+  <data name="HelpPushCurrent" xml:space="preserve">
+    <value>Make this package the current package file</value>
+  </data>
+  <data name="HelpPushArchive" xml:space="preserve">
+    <value>One or more wildcard patterns to match against existing package files to be archived</value>
+  </data>
   <data name="HelpPushDotNet" xml:space="preserve">
     <value>Change the required DotNetVersion for the package</value>
   </data>
@@ -150,10 +161,13 @@
   <data name="HelpPushPackage" xml:space="preserve">
     <value>Path to the package.zip you wish to push</value>
   </data>
-  <data name="HelpPushPublish" xml:space="preserve">
-    <value>Make this package the current package file</value>
-  </data>
   <data name="HelpPushWorks" xml:space="preserve">
     <value>Compatible Umbraco versions (in the form v850,v840,v830)</value>
+  </data>
+  <data name="HelpPackProperties" xml:space="preserve">
+    <value>Properties to replace in the package.xml file</value>
+  </data>
+  <data name="HelpPackPackageFileName" xml:space="preserve">
+    <value>An explicit file name to give the generated package file</value>
   </data>
 </root>
