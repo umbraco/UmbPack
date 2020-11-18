@@ -1,12 +1,9 @@
 name: Build and deploy
 
-env:
-  PKG_VERSION: 0.9.${{ github.run_number }}
-
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "release/*"
 
 jobs:
   build:
@@ -26,13 +23,18 @@ jobs:
     runs-on: windows-latest
 
     steps:
+       - name: Get Version 
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/release\//}
+        shell: bash
+
       - uses: actions/checkout@v2
 
       - name: Pack NuGet package
         run: dotnet pack ./src/ 
               --configuration Release 
-              -p:Version=${{ env.PKG_VERSION }} 
-              -p:PackageId=Umbraco.Tools.Packages
+              -p:Version=${{ steps.get_version.outputs.VERSION }} 
+              -p:PackageId=Test.Tools.Packages
 
       - name: Push package to NuGet
         run: dotnet nuget push **/*.nupkg
