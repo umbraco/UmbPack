@@ -153,7 +153,7 @@ namespace Umbraco.Packager.CI.Verbs
             if (nameNode != null)
             {
                 var name = nameNode.Value
-                    .Replace(".", "_")
+                    //.Replace(".", "_")
                     .Replace(" ", "_");
 
                 return template.Replace("{name}", name)
