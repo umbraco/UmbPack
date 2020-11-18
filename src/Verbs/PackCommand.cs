@@ -134,9 +134,7 @@ namespace Umbraco.Packager.CI.Verbs
             Console.WriteLine(Resources.Pack_GetPackageName);
 
             // work out what we are going to call the package
-            var packageFileName = !string.IsNullOrWhiteSpace(options.PackageFileName)
-                ? options.PackageFileName.EnsureEndsWith(".zip")
-                : GetPackageFileName(packageXml, version);
+            var packageFileName = GetPackageFileName(packageXml, version, options.PackageFileName);
 
             // work out what where we are going to output the package to
             var packageOutputPath = Path.Combine(options.OutputDirectory, packageFileName);
@@ -171,16 +169,21 @@ namespace Umbraco.Packager.CI.Verbs
             return folder;
         }
 
-        private static string GetPackageFileName(XElement packageFile, string version)
+        private static string GetPackageFileName(XElement packageFile, string version, string nameTemplate)
         {
+            var template = !string.IsNullOrWhiteSpace(nameTemplate)
+                ? nameTemplate.EnsureEndsWith(".zip")
+                : "{name}_{version}.zip";
+
             var nameNode = packageFile.Element("info")?.Element("package")?.Element("name");
             if (nameNode != null)
             {
                 var name = nameNode.Value
-                    .Replace(".", "_")
+                    //.Replace(".", "_")
                     .Replace(" ", "_");
 
-                return $"{name}_{version}.zip";
+                return template.Replace("{name}", name)
+                    .Replace("{version}", version);
             }
 
             Environment.Exit(2);
