@@ -38,7 +38,7 @@ namespace Umbraco.Packager.CI.Verbs
             HelpText = "HelpPushDotNet", ResourceType = typeof(HelpTextResource))]
         public string DotNetVersion { get; set; }
 
-        [Option('w', "WorksWith", Default = "v850", 
+        [Option('w', "WorksWith", 
             HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
 
@@ -161,7 +161,10 @@ namespace Umbraco.Packager.CI.Verbs
                     form.Add(new StringContent(ParseCurrentFlag(options.Current)), "isCurrent");
                     form.Add(new StringContent(options.DotNetVersion), "dotNetVersion");
                     form.Add(new StringContent("package"), "fileType");
-                    form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
+                    if (options.WorksWith != null)
+                    {
+                        form.Add(GetVersionCompatibility(options.WorksWith), "umbracoVersions");
+                    }
                     form.Add(new StringContent(packageInfo.VersionString), "packageVersion");
 
                     var httpResponse = await client.PostAsync(url, form);
