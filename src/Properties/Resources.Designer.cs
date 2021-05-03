@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties {
+namespace UmbPack.Properties {
     using System;
     
     
@@ -19,7 +19,7 @@ namespace Umbraco.Packager.CI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -89,7 +89,7 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to For more information see ?? .
+        ///   Looks up a localized string similar to For more information see https://our.umbraco.com/documentation/Extending/Packages/UmbPack .
         /// </summary>
         internal static string HelpFooter {
             get {
@@ -164,11 +164,11 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Licence.
+        ///   Looks up a localized string similar to License.
         /// </summary>
-        internal static string Init_Licence {
+        internal static string Init_License {
             get {
-                return ResourceManager.GetString("Init.Licence", resourceCulture);
+                return ResourceManager.GetString("Init.License", resourceCulture);
             }
         }
         
