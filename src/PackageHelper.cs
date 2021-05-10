@@ -100,19 +100,27 @@ namespace Umbraco.Packager.CI
             return null;
         }
 
-        public void EnsurePackageDoesntAlreadyExists(JArray packages, string packageFile)
+        public void EnsurePackageDoesntAlreadyExists(JArray packages, string packageFile, bool skipDuplicates = false)
         {
             if (packages == null) return;
 
             var packageFileName = Path.GetFileName(packageFile);
 
-            foreach(var package in packages)
+            foreach (var package in packages)
             {
-                var packageName = package.Value<string>("Name"); 
+                var packageName = package.Value<string>("Name");
                 if (packageName.Equals(packageFileName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    WriteError(Resources.Push_PackageExists, packageFileName);
-                    Environment.Exit(80); // FILE_EXISTS
+                    if (skipDuplicates)
+                    {
+                        WriteWarning(Resources.Push_PackageSkipped, packageFileName);
+                        Environment.Exit(0);
+                    }
+                    else
+                    {
+                        WriteError(Resources.Push_PackageExists, packageFileName);
+                        Environment.Exit(80); // FILE_EXISTS                
+                    }
                 }
             }
         }
@@ -171,6 +179,16 @@ namespace Umbraco.Packager.CI
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Error.WriteLine(error, parameters);
+            Console.ResetColor();
+        }
+
+        /// <summary>
+        ///  change the colour of the console, write a warning and reset the colour back.
+        /// </summary>
+        public void WriteWarning(string warning, params object[] parameters)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(warning, parameters);
             Console.ResetColor();
         }
 

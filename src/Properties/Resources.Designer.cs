@@ -434,6 +434,15 @@ namespace UmbPack.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipped pushing &apos;{0}&apos; - package file already exists.
+        /// </summary>
+        internal static string Push_PackageSkipped {
+            get {
+                return ResourceManager.GetString("Push.PackageSkipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uploading {0} to our.umbraco.com ....
         /// </summary>
         internal static string Push_Uploading {

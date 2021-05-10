@@ -253,4 +253,7 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
   <data name="Push.Uploading" xml:space="preserve">
     <value>Uploading {0} to our.umbraco.com ...</value>
   </data>
+  <data name="Push.PackageSkipped" xml:space="preserve">
+    <value>Skipped pushing '{0}' - package file already exists</value>
+  </data>
 </root>

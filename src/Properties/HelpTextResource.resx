@@ -170,4 +170,7 @@ The folder should exist prior to running the command</value>
   <data name="HelpPackPackageFileName" xml:space="preserve">
     <value>An explicit file name to give the generated package file</value>
   </data>
+  <data name="HelpPushSkipDuplicates" xml:space="preserve">
+    <value>Ignore duplicate package names</value>
+  </data>
 </root>

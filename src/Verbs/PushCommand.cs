@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using CommandLine;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Umbraco.Packager.CI.Auth;
 using Umbraco.Packager.CI.Properties;
 
@@ -30,21 +31,25 @@ namespace Umbraco.Packager.CI.Verbs
         [Option('k', "Key", HelpText = "HelpPushKey", ResourceType = typeof(HelpTextResource))]
         public string ApiKey { get; set; }
 
-        [Option('c', "Current", Default = "true", 
+        [Option('c', "Current", Default = "true",
             HelpText = "HelpPushCurrent", ResourceType = typeof(HelpTextResource))]
         public string Current { get; set; }
 
-        [Option("DotNetVersion", Default = "4.7.2", 
+        [Option("DotNetVersion", Default = "4.7.2",
             HelpText = "HelpPushDotNet", ResourceType = typeof(HelpTextResource))]
         public string DotNetVersion { get; set; }
 
-        [Option('w', "WorksWith", Default = "v850", 
+        [Option('w', "WorksWith", Default = "v850",
             HelpText = "HelpPushWorks", ResourceType = typeof(HelpTextResource))]
         public string WorksWith { get; set; }
 
-        [Option('a', "Archive", Separator = ' ', 
+        [Option('a', "Archive", Separator = ' ',
             HelpText = "HelpPushArchive", ResourceType = typeof(HelpTextResource))]
         public IEnumerable<string> Archive { get; set; }
+
+        [Option('s', "SkipDuplicates", Default = false,
+            HelpText = "HelpPushSkipDuplicates", ResourceType = typeof(HelpTextResource))]
+        public bool SkipDuplicates { get; set; }
     }
 
 
@@ -72,16 +77,40 @@ namespace Umbraco.Packager.CI.Verbs
             // gets a package list from our.umbraco
             // if the api key is invalid we will also find out here.
             var packages = await packageHelper.GetPackageList(keyParts);
-            var currentPackageId = await packageHelper.GetCurrentPackageFileId(keyParts);
 
             if (packages != null)
-            { 
-                packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath);
+            {
+                packageHelper.EnsurePackageDoesntAlreadyExists(packages, filePath, options.SkipDuplicates);
             }
+
+            await ArchivePackages(options, packageHelper, packages);
+
+            // Parse package.xml before upload to print out info
+            // and to use for comparison on what is already uploaded
+            var packageInfo = Parse.PackageXml(filePath);
+
+            // OK all checks passed - time to upload it
+            await UploadPackage(options, packageHelper, packageInfo);
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Determines package files for archiving, and awaits packagehelper completing the archiving action
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="packageHelper"></param>
+        /// <param name="packages"></param>
+        /// <returns></returns>
+        private static async Task ArchivePackages(PushOptions options, PackageHelper packageHelper, JArray packages)
+        {
+            var keyParts = packageHelper.SplitKey(options.ApiKey);
 
             // Archive packages
             var archivePatterns = new List<string>();
             var packagesToArchive = new List<int>();
+
+            var currentPackageId = await packageHelper.GetCurrentPackageFileId(keyParts);
 
             if (options.Archive != null)
             {
@@ -116,17 +145,15 @@ namespace Umbraco.Packager.CI.Verbs
                 await packageHelper.ArchivePackages(keyParts, packagesToArchive.Distinct());
                 Console.WriteLine($"Archived {packagesToArchive.Count} packages matching the archive pattern.");
             }
-
-            // Parse package.xml before upload to print out info
-            // and to use for comparison on what is already uploaded
-            var packageInfo = Parse.PackageXml(filePath);
-
-            // OK all checks passed - time to upload it
-            await UploadPackage(options, packageHelper, packageInfo);
-
-            return 0;
         }
 
+        /// <summary>
+        /// Uploads the package to the our.umbraco.com package repository
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="packageHelper"></param>
+        /// <param name="packageInfo"></param>
+        /// <returns></returns>
         private static async Task UploadPackage(PushOptions options, PackageHelper packageHelper, PackageInfo packageInfo)
         {
             try
@@ -136,8 +163,8 @@ namespace Umbraco.Packager.CI.Verbs
                 var processMsgHandler = new ProgressMessageHandler(new HttpClientHandler());
                 processMsgHandler.HttpSendProgress += (sender, e) =>
                 {
-                    // Could try to reimplement progressbar - but that library did not work in GH Actions :(
-                    var percent = e.ProgressPercentage;
+                // Could try to reimplement progressbar - but that library did not work in GH Actions :(
+                var percent = e.ProgressPercentage;
                 };
 
                 var keyParts = packageHelper.SplitKey(options.ApiKey);
@@ -173,7 +200,7 @@ namespace Umbraco.Packager.CI.Verbs
                     else if (httpResponse.IsSuccessStatusCode)
                     {
                         Console.WriteLine(Resources.Push_Complete, packageFileName);
-                        
+
                         // Response is not reported (at the moment)
                         // var apiReponse = await httpResponse.Content.ReadAsStringAsync();
                         // Console.WriteLine(apiReponse);

@@ -201,6 +201,15 @@ namespace Umbraco.Packager.CI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignore duplicate package names.
+        /// </summary>
+        public static string HelpPushSkipDuplicates {
+            get {
+                return ResourceManager.GetString("HelpPushSkipDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compatible Umbraco versions (in the form v850,v840,v830).
         /// </summary>
         public static string HelpPushWorks {
