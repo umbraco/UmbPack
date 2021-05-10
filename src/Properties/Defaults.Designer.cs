@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Umbraco.Packager.CI.Properties {
+namespace UmbPack.Properties {
     using System;
     
     
@@ -72,9 +72,9 @@ namespace Umbraco.Packager.CI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MIT.
         /// </summary>
-        internal static string Init_Licence {
+        internal static string Init_License {
             get {
-                return ResourceManager.GetString("Init_Licence", resourceCulture);
+                return ResourceManager.GetString("Init_License", resourceCulture);
             }
         }
         

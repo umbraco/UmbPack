@@ -120,7 +120,7 @@
   <data name="Init_Description" xml:space="preserve">
     <value>Another awesome package</value>
   </data>
-  <data name="Init_Licence" xml:space="preserve">
+  <data name="Init_License" xml:space="preserve">
     <value>MIT</value>
   </data>
   <data name="Init_Prompt" xml:space="preserve">

@@ -160,8 +160,8 @@ See https://our.umbraco.com/documentation/Extending/Packages/Creating-a-Package/
   <data name="Init.InvalidVersion" xml:space="preserve">
     <value>Invalid Version: '{0}'</value>
   </data>
-  <data name="Init.Licence" xml:space="preserve">
-    <value>Licence</value>
+  <data name="Init.License" xml:space="preserve">
+    <value>License</value>
   </data>
   <data name="Init.MissingFolder" xml:space="preserve">
     <value>The location '{0}' where you want to put the package file doesn't exist.</value>

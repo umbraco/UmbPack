@@ -71,7 +71,7 @@ namespace Umbraco.Packager.CI.Verbs
 
             setup.Website = GetUserInput(Resources.Init_Website, Defaults.Init_Website);
 
-            setup.Licence = GetUserInput(Resources.Init_Licence, Defaults.Init_Licence);
+            setup.License = GetUserInput(Resources.Init_License, Defaults.Init_License);
 
             setup.Contributors = GetUserInput(Resources.Init_Contributors, null);
 
@@ -115,8 +115,8 @@ namespace Umbraco.Packager.CI.Verbs
             package.Add(new XElement("name", options.Name));
             package.Add(new XElement("version", options.Version));
             package.Add(new XElement("iconUrl", ""));
-            package.Add(new XElement("licence", options.Licence,
-                new XAttribute("url", GetLicenceUrl(options.Licence))));
+            package.Add(new XElement("license", options.License,
+                new XAttribute("url", GetLicenseUrl(options.License))));
             
             package.Add(new XElement("url", options.Url));
             package.Add(new XElement("requirements",
@@ -162,14 +162,14 @@ namespace Umbraco.Packager.CI.Verbs
         }
 
         /// <summary>
-        ///  Workout the URL for the licence based on the string value
+        ///  Workout the URL for the license based on the string value
         /// </summary>
-        /// <param name="licenceName">Licence Name (e.g MIT)</param>
-        /// <returns>URL for the licence file</returns>
-        private static string GetLicenceUrl(string licenceName)
+        /// <param name="licenseName">License Name (e.g MIT)</param>
+        /// <returns>URL for the license file</returns>
+        private static string GetLicenseUrl(string licenseName)
         {
-            // TODO - get licence urls from somewhere?
-            if (licenceName.Equals("MIT", StringComparison.InvariantCultureIgnoreCase))
+            // TODO - get license urls from somewhere?
+            if (licenseName.Equals("MIT", StringComparison.InvariantCultureIgnoreCase))
             {
                 return "https://opensource.org/licenses/MIT";
             }
@@ -263,7 +263,7 @@ namespace Umbraco.Packager.CI.Verbs
             public string Url { get; set; }
             public string Author { get; set; }
             public string Website { get; set; }
-            public string Licence { get; set; }
+            public string License { get; set; }
             public string Contributors { get; set; }
             public SemVersion UmbracoVersion { get; set; }
             public string Description { get; set; }
